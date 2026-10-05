@@ -1,0 +1,8 @@
+{
+  "name": "invoice-automation",
+  "private": true,
+  "description": "Tooling for the local Supabase stack. The web app lives in web/.",
+  "devDependencies": {
+    "supabase": "^2.119.0"
+  }
+}
