@@ -23,6 +23,17 @@ LATEST_EXTRACTION = """
 """
 
 
+AMOUNT_COLUMNS = frozenset({"subtotal", "discount", "shipping", "tax_total", "total"})
+
+
+def money_text(value: Decimal | None) -> str | None:
+    """Amount without the NUMERIC(18,4) padding: 2398.5000 -> 2398.50, 12.3450 -> 12.345."""
+    if value is None:
+        return None
+    cents = value.quantize(Decimal("0.01"))
+    return str(cents if cents == value else value.normalize())
+
+
 def as_json(value: Any) -> str:
     """JSON text for a jsonb parameter; UUIDs, dates and Decimals become strings."""
     return json.dumps(value, default=str)
@@ -71,7 +82,11 @@ def find_earlier_file(conn: Connection, document_id: UUID, sha256: str) -> UUID 
 
 
 def find_duplicate_invoice(
-    conn: Connection, document_id: UUID, vendor_id: UUID, number: str
+    conn: Connection,
+    document_id: UUID,
+    vendor_id: UUID,
+    number: str,
+    include_pending: bool = True,
 ) -> DuplicateHit | None:
     """H5: an approved invoice, or a document still in review, with this vendor and number."""
     row = conn.execute(
@@ -86,7 +101,7 @@ def find_duplicate_invoice(
         ),
         {"vendor_id": vendor_id, "number": number, "id": document_id},
     ).one_or_none()
-    if row is None:
+    if row is None and include_pending:
         row = conn.execute(
             text(
                 f"""
@@ -321,3 +336,25 @@ def set_processing_details(
         ),
         {"id": document_id, "extraction_path": extraction_path, "last_error": last_error},
     )
+
+
+def invoice_event_payload(conn: Connection, invoice_id: UUID) -> dict[str, Any]:
+    """Invoice data sent with approved and auto_approved events, one Sheets row per invoice."""
+    row = conn.execute(
+        text(
+            """
+            SELECT i.id AS invoice_id, i.document_id, v.canonical_name AS vendor,
+                   v.tax_id AS vendor_tax_id,
+                   i.invoice_number, i.invoice_date, i.due_date, i.currency, i.subtotal,
+                   i.discount, i.shipping, i.tax_total, i.total, i.approval_mode,
+                   i.approved_by, i.approved_at
+            FROM invoices i JOIN vendors v ON v.id = i.vendor_id
+            WHERE i.id = :id
+            """
+        ),
+        {"id": invoice_id},
+    ).one()
+    return {
+        key: money_text(value) if key in AMOUNT_COLUMNS else value
+        for key, value in row._mapping.items()
+    }

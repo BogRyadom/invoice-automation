@@ -73,9 +73,11 @@
     ]
   },
   "route": {
-    "status": "auto_approved",
+    "status": "needs_review",
     "reason": null,
-    "flags": [],
+    "flags": [
+      "W9"
+    ],
     "duplicate_of": null
   },
   "render": {

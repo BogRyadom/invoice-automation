@@ -1,0 +1,433 @@
+{
+  "id": "invoiceIngest001",
+  "versionId": "f550ffba-b218-59ed-a707-75fb0a1dc7f0",
+  "name": "invoice_ingest",
+  "nodes": [
+    {
+      "id": "dd23414a-ca3e-5b94-aea7-ffd818716797",
+      "name": "Gmail: Invoices/Inbox",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        300
+      ],
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "q": "label:invoices-inbox"
+        },
+        "options": {
+          "downloadAttachments": true,
+          "dataPropertyAttachmentsPrefixName": "attachment_"
+        }
+      }
+    },
+    {
+      "id": "2c6b4f20-68d3-52d4-a816-aa678cd0755b",
+      "name": "Split PDF attachments",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// One item per PDF attachment; a message without PDFs gives one item with has_pdf = false.\nconst out = [];\nfor (const item of $input.all()) {\n  const m = item.json;\n  const sender = m.from?.value?.[0]?.address ?? m.from?.text ?? '';\n  const base = {\n    message_id: m.id,\n    sender,\n    subject: m.subject ?? '',\n    received_at: new Date(m.date ?? Date.now()).toISOString(),\n  };\n  const pdfs = Object.entries(item.binary ?? {}).filter(([, b]) =>\n    (b.mimeType ?? '').toLowerCase() === 'application/pdf' ||\n    (b.fileName ?? '').toLowerCase().endsWith('.pdf'));\n  if (pdfs.length === 0) {\n    out.push({ json: { ...base, has_pdf: false } });\n    continue;\n  }\n  for (const [key, b] of pdfs) {\n    out.push({\n      json: { ...base, has_pdf: true, attachment_id: key, filename: b.fileName ?? key },\n      binary: { file: b },\n    });\n  }\n}\nreturn out;\n"
+      }
+    },
+    {
+      "id": "51279a86-a386-5c69-b558-af676dd2d207",
+      "name": "Has PDF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        440,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4e8bfa1f-6f7b-5170-a0a6-1719d9f177f9",
+              "leftValue": "={{ $json.has_pdf }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "a3e743cc-52b5-5f52-8c6f-b91a405fb70b",
+      "name": "POST /api/documents",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        660,
+        200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.API_URL }}/api/documents",
+        "sendHeaders": true,
+        "specifyHeaders": "keypair",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Ingest-Secret",
+              "value": "={{ $env.INGEST_SHARED_SECRET }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "file"
+            },
+            {
+              "parameterType": "formData",
+              "name": "gmail_message_id",
+              "value": "={{ $json.message_id }}"
+            },
+            {
+              "parameterType": "formData",
+              "name": "attachment_id",
+              "value": "={{ $json.attachment_id }}"
+            },
+            {
+              "parameterType": "formData",
+              "name": "sender",
+              "value": "={{ $json.sender }}"
+            },
+            {
+              "parameterType": "formData",
+              "name": "subject",
+              "value": "={{ $json.subject }}"
+            },
+            {
+              "parameterType": "formData",
+              "name": "received_at",
+              "value": "={{ $json.received_at }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "2cf1c0c8-69aa-5384-9cfb-386b5e6f93c3",
+      "name": "Label: Received",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        900,
+        120
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "addLabels",
+        "messageId": "={{ $('Split PDF attachments').item.json.message_id }}",
+        "labelIds": []
+      }
+    },
+    {
+      "id": "cd50633c-d317-5e61-bb03-43872ae73bcc",
+      "name": "Slack set (ingest failed)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        900,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2263850d-d6c3-513d-999f-ce8c8530a13a",
+              "leftValue": "={{ $env.SLACK_WEBHOOK_URL }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "c576bd69-eae3-5ce4-bd0f-77d76f175ae1",
+      "name": "Slack: ingest failed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1120,
+        260
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ { text: `:rotating_light: Could not hand an attachment to the API after 3 attempts: ${$('Split PDF attachments').item.json.filename} from ${$('Split PDF attachments').item.json.sender}.` } }}",
+        "options": {
+          "timeout": 15000
+        }
+      }
+    },
+    {
+      "id": "78e46ae5-0049-5080-8de4-6ec404ee023b",
+      "name": "Label: Ingest-failed",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1340,
+        300
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "addLabels",
+        "messageId": "={{ $('Split PDF attachments').item.json.message_id }}",
+        "labelIds": []
+      }
+    },
+    {
+      "id": "bc314eaa-133a-5712-83dc-880275c38c38",
+      "name": "Slack set (no attachment)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        660,
+        460
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2263850d-d6c3-513d-999f-ce8c8530a13a",
+              "leftValue": "={{ $env.SLACK_WEBHOOK_URL }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "9b373ba8-32e7-5c30-a653-0e7f92819236",
+      "name": "Slack: no attachment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        880,
+        420
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ { text: `:paperclip: E-mail without a PDF in Invoices/Inbox: ${$('Split PDF attachments').item.json.subject} from ${$('Split PDF attachments').item.json.sender}.` } }}",
+        "options": {
+          "timeout": 15000
+        }
+      }
+    },
+    {
+      "id": "809e85f6-8100-58eb-81d9-9e464d96e8e3",
+      "name": "Label: No-attachment",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1100,
+        460
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "addLabels",
+        "messageId": "={{ $('Split PDF attachments').item.json.message_id }}",
+        "labelIds": []
+      }
+    }
+  ],
+  "connections": {
+    "Gmail: Invoices/Inbox": {
+      "main": [
+        [
+          {
+            "node": "Split PDF attachments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split PDF attachments": {
+      "main": [
+        [
+          {
+            "node": "Has PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has PDF": {
+      "main": [
+        [
+          {
+            "node": "POST /api/documents",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack set (no attachment)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST /api/documents": {
+      "main": [
+        [
+          {
+            "node": "Label: Received",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack set (ingest failed)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack set (ingest failed)": {
+      "main": [
+        [
+          {
+            "node": "Slack: ingest failed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Label: Ingest-failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack: ingest failed": {
+      "main": [
+        [
+          {
+            "node": "Label: Ingest-failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack set (no attachment)": {
+      "main": [
+        [
+          {
+            "node": "Slack: no attachment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Label: No-attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack: no attachment": {
+      "main": [
+        [
+          {
+            "node": "Label: No-attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "errorWorkflow": "errorHandler0001"
+  },
+  "active": false,
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

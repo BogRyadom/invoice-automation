@@ -47,8 +47,8 @@ def test_oracle_scores_perfectly(corpus: list[GroundTruth], oracle: list[Predict
     assert oracle_failures(report) == []
     assert report.field_accuracy["total"] == Ratio(29, 29)
     assert report.document_type_accuracy == Ratio(32, 32)
-    assert report.review_rate == Ratio(13, 29)
-    assert report.auto_approve_precision == Ratio(16, 16)
+    assert report.review_rate == Ratio(14, 29)
+    assert report.auto_approve_precision == Ratio(15, 15)
     assert report.errors_sent_to_review == Ratio(0, 0)
 
 
@@ -60,7 +60,7 @@ def test_wrong_value_that_is_auto_approved_lowers_precision(
     report = evaluate(corpus, predictions)
 
     assert report.field_accuracy["total"] == Ratio(28, 29)
-    assert report.auto_approve_precision == Ratio(15, 16)
+    assert report.auto_approve_precision == Ratio(14, 15)
     assert report.errors_sent_to_review == Ratio(0, 1)
     assert oracle_failures(report) != []
 
@@ -76,8 +76,8 @@ def test_wrong_value_sent_to_review_counts_as_caught(
     report = evaluate(corpus, predictions)
 
     assert report.errors_sent_to_review == Ratio(1, 1)
-    assert report.auto_approve_precision == Ratio(15, 15)
-    assert report.review_rate == Ratio(14, 29)
+    assert report.auto_approve_precision == Ratio(14, 14)
+    assert report.review_rate == Ratio(15, 29)
 
 
 def test_invoice_classified_as_other(corpus: list[GroundTruth], oracle: list[Prediction]) -> None:
@@ -89,7 +89,7 @@ def test_invoice_classified_as_other(corpus: list[GroundTruth], oracle: list[Pre
 
     assert report.document_type_accuracy == Ratio(31, 32)
     assert report.field_accuracy["invoice_number"] == Ratio(28, 29)
-    assert report.review_rate == Ratio(13, 28)
+    assert report.review_rate == Ratio(14, 28)
     assert report.errors_sent_to_review == Ratio(0, 0)
     wrong = next(d for d in report.documents if d.doc_id == "clean_02")
     assert wrong.predicted_status == "skipped"
@@ -158,7 +158,7 @@ def test_write_results_names_files_and_never_overwrites(
     assert first.with_suffix(".md").exists()
     data = json.loads(first.read_text(encoding="utf-8"))
     assert data["corpus"] == {"size": 35, "synthetic": True}
-    assert data["review_rate"] == {"hits": 13, "total": 29}
+    assert data["review_rate"] == {"hits": 14, "total": 29}
     assert len(data["documents"]) == 35
 
 
@@ -181,7 +181,7 @@ def test_cli_oracle_run_passes_and_saves_nothing(
     assert main(["--predictor", "oracle"], today=RUN_DATE, results_dir=tmp_path) == 0
 
     output = capsys.readouterr().out
-    assert "| Review rate | 44.8% (13/29) |" in output
+    assert "| Review rate | 48.3% (14/29) |" in output
     assert "Harness check passed" in output
     assert list(tmp_path.iterdir()) == []
 
@@ -229,8 +229,8 @@ def test_full_pipeline_reproduces_every_expected_route(
     assert mismatched == []
     assert data["field_accuracy"]["total"] == {"hits": 29, "total": 29}
     assert data["document_type_accuracy"] == {"hits": 32, "total": 32}
-    assert data["review_rate"] == {"hits": 13, "total": 29}
-    assert data["auto_approve_precision"] == {"hits": 16, "total": 16}
+    assert data["review_rate"] == {"hits": 14, "total": 29}
+    assert data["auto_approve_precision"] == {"hits": 15, "total": 15}
     assert data["errors_sent_to_review"] == {"hits": 0, "total": 0}
     outcomes = {doc["doc_id"]: doc["outcome"] for doc in data["documents"]}
     assert outcomes["duplicate_01"] == "skipped: duplicate_file"

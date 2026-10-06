@@ -2,7 +2,7 @@
 
 Invoice processing from Gmail with verifiable extraction, deterministic validation and human review.
 
-Portfolio project, work in progress. Current state: Stage 3 (checks, vendor matching, duplicates, routing, status machine and the queue worker). The specification and stage plan live in [docs/SPEC.md](docs/SPEC.md) (in Russian).
+Portfolio project, work in progress. Current state: Stage 4 (ingest and review API, outbox delivery, n8n workflows for Gmail, Slack and Google Sheets). The specification and stage plan live in [docs/SPEC.md](docs/SPEC.md) (in Russian).
 
 ## Stack
 
@@ -29,10 +29,11 @@ make up
 | API health | http://localhost:8000/health |
 | Review UI | http://localhost:3000 |
 | Supabase Studio | http://127.0.0.1:54323 |
+| n8n | http://localhost:5678 |
 
 Supabase keys for `.env` (`SUPABASE_SECRET_KEY`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`) are printed by `npx supabase status`. Stage 0 does not need them yet.
 
-Stop everything with `make down`.
+Stop everything with `make down`. Connecting Gmail, Google Sheets and Slack is described in [docs/integrations.md](docs/integrations.md).
 
 ## Development
 
@@ -46,6 +47,8 @@ Stop everything with `make down`.
 | `make eval-oracle` | check the eval harness against ground truth; nothing is saved |
 | `make eval-smoke` | real LLM on three documents to check the setup; nothing is saved |
 | `make eval` | real LLM on the whole corpus; results go to `eval/results/` |
+| `make demo-send` | feed the synthetic corpus to the running API as if it came from Gmail |
+| `make n8n-import` | load the workflows from `n8n/` into the local n8n |
 | `npx supabase migration new <name>` | create a new SQL migration in `supabase/migrations` |
 
 ## Repository layout

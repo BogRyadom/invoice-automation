@@ -5,7 +5,13 @@ from pydantic import SecretStr
 from app.config import REPO_ROOT, Settings
 
 ENV_EXAMPLE = REPO_ROOT / ".env.example"
-NON_API_VARIABLES = {"TEST_DATABASE_URL"}
+# Read by the tests, the n8n container or its workflows, not by the API settings.
+NON_API_VARIABLES = {
+    "TEST_DATABASE_URL",
+    "N8N_ENCRYPTION_KEY",
+    "SLACK_WEBHOOK_URL",
+    "GOOGLE_SHEET_ID",
+}
 NON_API_PREFIXES = ("NEXT_PUBLIC_",)
 
 SETTING_NAMES = {name.upper() for name in Settings.model_fields}
@@ -35,8 +41,9 @@ def test_no_unknown_variables() -> None:
 
 def test_secrets_are_empty() -> None:
     values = example_values()
+    secrets = SECRET_NAMES | {"N8N_ENCRYPTION_KEY", "SLACK_WEBHOOK_URL", "GOOGLE_SHEET_ID"}
     assert SECRET_NAMES
-    assert {name for name in SECRET_NAMES if values.get(name)} == set()
+    assert {name for name in secrets if values.get(name)} == set()
 
 
 def test_example_values_are_valid(clean_env: pytest.MonkeyPatch) -> None:

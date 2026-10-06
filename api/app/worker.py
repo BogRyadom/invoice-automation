@@ -6,6 +6,7 @@ import logging
 import signal
 import threading
 
+import httpx
 from sqlalchemy import Connection, Engine, text
 
 from app import repository as repo
@@ -14,6 +15,7 @@ from app.db import create_db_engine, ping
 from app.extraction.groq_provider import GroqProvider
 from app.extraction.provider import ExtractionProvider
 from app.log import configure_logging
+from app.outbox import deliver_batch
 from app.processing import ACTOR, ClaimedDocument, ProviderFatal, process_document
 from app.status import change_status, record_event
 from app.storage import DocumentStore, SupabaseDocumentStore
@@ -118,10 +120,12 @@ def run(
     store: DocumentStore,
     provider: ExtractionProvider,
     settings: Settings,
+    outbox_client: httpx.Client | None = None,
 ) -> int:
-    """Process documents until stop is set. Returns the number of documents handled."""
+    """Process documents and deliver outbox events until stop is set. Returns documents handled."""
     handled = 0
     while not stop.is_set():
+        delivered = deliver_batch(engine, outbox_client, settings) if outbox_client else 0
         try:
             busy = run_once(engine, store, provider, settings)
         except ProviderFatal as exc:
@@ -130,7 +134,7 @@ def run(
             continue
         if busy:
             handled += 1
-        else:
+        elif not delivered:
             stop.wait(settings.worker_poll_interval_seconds)
     return handled
 
@@ -149,7 +153,8 @@ def main() -> None:
         signal.signal(sig, lambda *_: stop.set())
 
     logger.info("worker started")
-    run(stop, engine, store, provider, settings)
+    with httpx.Client() as outbox_client:
+        run(stop, engine, store, provider, settings, outbox_client)
     engine.dispose()
     logger.info("worker stopped")
 

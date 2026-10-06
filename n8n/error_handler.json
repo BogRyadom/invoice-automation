@@ -1,0 +1,106 @@
+{
+  "id": "errorHandler0001",
+  "versionId": "3ef56352-6281-5338-8f46-74995f4eb225",
+  "name": "error_handler",
+  "nodes": [
+    {
+      "id": "1d87c382-bf80-5833-bdff-f3115a9a3f10",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "48f3251e-d822-5806-bb0d-db3db5fd5fbe",
+      "name": "Slack set",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        220,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2263850d-d6c3-513d-999f-ce8c8530a13a",
+              "leftValue": "={{ $env.SLACK_WEBHOOK_URL }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "35d9bc7e-7d2d-5217-95af-9400899fb639",
+      "name": "Slack: workflow error",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        440,
+        260
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ { text: `:warning: n8n workflow ${$json.workflow.name} failed: ${$json.execution?.error?.message ?? 'unknown error'}. ${$json.execution?.url ?? ''}` } }}",
+        "options": {
+          "timeout": 15000
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Slack set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack set": {
+      "main": [
+        [
+          {
+            "node": "Slack: workflow error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true
+  },
+  "active": false,
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

@@ -39,7 +39,8 @@ def context(doc: GroundTruth) -> CheckContext:
         else VendorMatch(None, "none")
     )
     path = doc.extraction_path or "text"
-    text = " ".join(extract_text(document_path(doc).read_bytes())) if path == "text" else None
+    layer = extract_text(document_path(doc).read_bytes())
+    text = " ".join(layer.pages) if path == "text" else None
     duplicate = (
         DuplicateHit(uuid4(), uuid4(), doc.printed.invoice_number_raw or "", "auto_approved")
         if doc.route.duplicate_of
@@ -56,6 +57,7 @@ def context(doc: GroundTruth) -> CheckContext:
         possible_duplicate=None,
         amount_tolerance=Decimal("0.02"),
         auto_approve_max_total=Decimal("5000"),
+        hidden_chars=layer.hidden_chars,
     )
 
 
@@ -77,7 +79,7 @@ def test_every_check_reports_a_result() -> None:
     results = run_checks(context(DOCS["clean_01"]))
 
     ids = {r.check_id for r in results}
-    assert ids == {f"H{n}" for n in range(1, 7)} | {f"W{n}" for n in range(1, 9)}
+    assert ids == {f"H{n}" for n in range(1, 7)} | {f"W{n}" for n in range(1, 10)}
     assert all(r.severity == ("hard" if r.check_id[0] == "H" else "warning") for r in results)
 
 
@@ -123,8 +125,7 @@ def test_value_missing_from_text_fails_h4() -> None:
     assert [r.field for r in failures] == ["total"]
 
 
-def test_injected_total_is_caught_by_arithmetic_not_grounding() -> None:
-    # The injected values are printed in hidden text, so grounding finds them (known gap).
+def test_injected_values_are_caught_once_hidden_text_is_removed() -> None:
     doc = DOCS["injection_01"]
     ctx = context(doc)
     injected = ctx.extraction.model_copy(
@@ -134,9 +135,10 @@ def test_injected_total_is_caught_by_arithmetic_not_grounding() -> None:
 
     results = run_checks(ctx)
 
+    grounding = {r.field for r in results if r.check_id == "H4" and r.status == "fail"}
+    assert grounding == {"invoice_number", "total"}
     assert statuses(results, "H2") == {"fail"}
-    assert statuses(results, "H4") == {"pass"}
-    assert route(results, auto_approve_enabled=True) == "needs_review"
+    assert statuses(results, "W9") == {"fail"}
 
 
 def test_future_invoice_date_fails_h6() -> None:

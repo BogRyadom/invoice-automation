@@ -179,6 +179,7 @@ def route_invoice(
                 possible_duplicate=possible_duplicate,
                 amount_tolerance=settings.amount_tolerance,
                 auto_approve_max_total=settings.auto_approve_max_total,
+                hidden_chars=result.hidden_chars,
             )
         )
         target: Status = route(results, settings.auto_approve_enabled)
@@ -197,11 +198,12 @@ def route_invoice(
                 "possible_duplicate": asdict(possible_duplicate) if possible_duplicate else None,
             },
         )
+        invoice_id = None
         if target == "auto_approved":
             assert match.vendor is not None
             try:
                 with conn.begin_nested():
-                    repo.insert_invoice(
+                    invoice_id = repo.insert_invoice(
                         conn,
                         doc.id,
                         match.vendor.id,
@@ -220,17 +222,13 @@ def route_invoice(
 
         flags = sorted(failed_checks(results))
         change_status(conn, doc.id, target, actor=ACTOR, details={"flags": flags})
-        repo.add_outbox_event(
-            conn,
-            doc.id,
-            target,
-            {
-                "document_id": doc.id,
-                "vendor": match.vendor.canonical_name if match.vendor else invoice.vendor_name,
-                "invoice_number": invoice.invoice_number,
-                "total": invoice.total,
-                "currency": invoice.currency,
-                "flags": flags,
-            },
-        )
+        summary = {
+            "document_id": doc.id,
+            "vendor": match.vendor.canonical_name if match.vendor else invoice.vendor_name,
+            "invoice_number": invoice.invoice_number,
+            "total": invoice.total,
+            "currency": invoice.currency,
+        }
+        payload = repo.invoice_event_payload(conn, invoice_id) if invoice_id else summary
+        repo.add_outbox_event(conn, doc.id, target, {**payload, "flags": flags})
     return target

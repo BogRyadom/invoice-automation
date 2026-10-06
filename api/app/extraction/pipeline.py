@@ -52,6 +52,7 @@ class ExtractionResult:
     extraction: Extraction
     text: str | None
     completions: tuple[Completion, ...]
+    hidden_chars: int = 0
 
 
 def parse_extraction(content: str) -> tuple[Extraction | None, str]:
@@ -74,13 +75,13 @@ def run_extraction(
         pages = inspect_pdf(
             data, max_bytes=settings.max_file_mb * 1024 * 1024, max_pages=settings.max_pages
         )
-        page_texts = extract_text(data)
+        layer = extract_text(data)
     except FileRejected as exc:
         raise ExtractionError(exc.reason, str(exc)) from exc
 
     path: ExtractionPath
-    if has_text_layer(page_texts):
-        path, text, messages = "text", document_text(page_texts), text_messages(page_texts)
+    if has_text_layer(layer.pages):
+        path, text, messages = "text", document_text(layer.pages), text_messages(layer.pages)
     elif pages > provider.max_images:
         raise ExtractionError(
             "too_large", f"{pages} scanned pages, the vision model accepts {provider.max_images}"
@@ -109,4 +110,5 @@ def run_extraction(
         extraction=extraction,
         text=text,
         completions=tuple(completions),
+        hidden_chars=layer.hidden_chars,
     )

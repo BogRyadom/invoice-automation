@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     database_url: str
 
     supabase_url: str = "http://127.0.0.1:54321"
+    supabase_public_url: str = "http://127.0.0.1:54321"
     supabase_secret_key: SecretStr = SecretStr("")
     supabase_storage_bucket: str = "invoices"
     signed_url_ttl_seconds: int = Field(default=300, gt=0)

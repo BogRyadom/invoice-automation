@@ -138,6 +138,8 @@ def derived_flags(doc: GroundTruth, known_keys: set[str]) -> set[str]:
         flags.add("W6")
     if doc.route.duplicate_of:
         flags.add("H5")
+    if doc.render.hidden_text:
+        flags.add("W9")
     return flags
 
 
@@ -198,7 +200,7 @@ def test_dates_are_valid_for_h6(corpus: list[GroundTruth]) -> None:
 
 
 def test_every_route_flag_is_known(corpus: list[GroundTruth]) -> None:
-    allowed = {"H2", "H5", "W1", "W2", "W3", "W4", "W5", "W6", "W7"}
+    allowed = {"H2", "H5", "W1", "W2", "W3", "W4", "W5", "W6", "W7", "W9"}
     for doc in corpus:
         assert set(doc.route.flags) <= allowed, doc.doc_id
 

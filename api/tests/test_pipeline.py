@@ -91,8 +91,8 @@ def test_inspect_pdf_checks_magic_bytes() -> None:
 
 
 def test_text_layer_and_rendering(docs: dict[str, GroundTruth]) -> None:
-    text_pages = extract_text(pdf(docs, "clean_01"))
-    scan_pages = extract_text(pdf(docs, "scan_01"))
+    text_pages = extract_text(pdf(docs, "clean_01")).pages
+    scan_pages = extract_text(pdf(docs, "scan_01")).pages
 
     assert "QOS-26-0412" in text_pages[0]
     assert has_text_layer(text_pages)
@@ -106,7 +106,7 @@ def test_grounding_values_survive_text_extraction(docs: dict[str, GroundTruth]) 
     for doc in docs.values():
         if doc.extraction_path != "text" or doc.printed is None:
             continue
-        text = " ".join(" ".join(extract_text(pdf(docs, doc.doc_id))).split())
+        text = " ".join(" ".join(extract_text(pdf(docs, doc.doc_id)).pages).split())
         printed = doc.printed
         for value in (
             printed.vendor_name_raw,
@@ -120,10 +120,37 @@ def test_grounding_values_survive_text_extraction(docs: dict[str, GroundTruth]) 
 
 
 def test_columns_stay_apart(docs: dict[str, GroundTruth]) -> None:
-    lines = extract_text(pdf(docs, "clean_04"))[0].splitlines()
+    lines = extract_text(pdf(docs, "clean_04")).pages[0].splitlines()
     vendor_line = next(line for line in lines if "BREVIK SOFTWARE CORP." in line)
 
     assert "CORP.   " in vendor_line
+
+
+def test_hidden_text_is_removed_and_counted(docs: dict[str, GroundTruth]) -> None:
+    layer = extract_text(pdf(docs, "injection_01"))
+    text = " ".join(layer.pages)
+
+    assert layer.hidden_chars > 100
+    assert "ignore all previous instructions" not in text
+    assert "PA-9999" not in text
+    assert "BSC-INV-00866" in text
+
+
+def test_light_text_on_a_dark_band_stays_visible(docs: dict[str, GroundTruth]) -> None:
+    layer = extract_text(pdf(docs, "clean_02"))
+
+    assert layer.hidden_chars == 0
+    assert "Velmora Logistics LLC" in " ".join(layer.pages[0].split())
+
+
+def test_hidden_text_reaches_the_result(settings: Settings, docs: dict[str, GroundTruth]) -> None:
+    provider = ScriptedProvider([answer(docs, "injection_01")])
+
+    result = run_extraction(pdf(docs, "injection_01"), provider, settings)
+
+    assert result.hidden_chars > 100
+    assert result.text is not None and "ignore all previous" not in result.text
+    assert "ignore all previous" not in provider.calls[0][1][1]["content"]
 
 
 def test_document_tags_inside_text_are_neutralised() -> None:

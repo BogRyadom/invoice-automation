@@ -19,3 +19,6 @@ node_modules/
 .DS_Store
 Thumbs.db
 .claude/settings.local.json
+
+# Local OAuth client files and tokens (scripts/gmail_seed.py)
+.secrets/

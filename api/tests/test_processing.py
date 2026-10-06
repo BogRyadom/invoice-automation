@@ -115,7 +115,7 @@ def test_clean_invoice_is_auto_approved(engine: Engine, auto: Settings) -> None:
     sql = "SELECT count(*) FROM invoices WHERE document_id = :id AND approval_mode = 'auto'"
     assert count(engine, sql, id=document_id) == 1
     assert count(engine, "SELECT count(*) FROM invoice_line_items") == 4
-    assert count(engine, "SELECT count(*) FROM check_results") == 14
+    assert count(engine, "SELECT count(*) FROM check_results") == 15
     sql = "SELECT count(*) FROM outbox_events WHERE event_type = 'auto_approved'"
     assert count(engine, sql) == 1
     sql = "SELECT count(*) FROM document_events WHERE document_id = :id"

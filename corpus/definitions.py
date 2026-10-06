@@ -776,6 +776,7 @@ def build_documents() -> list[GroundTruth]:
             date_style="day_mon",
             items=picks(BREVIK, (1, 1), (4, 1)),
             hidden_text=INJECTION_TEXT,
+            flags=["W9"],
         ),
         invoice(
             "arithmetic_01",

@@ -50,6 +50,7 @@ class CheckContext:
     possible_duplicate: DuplicateHit | None
     amount_tolerance: Decimal
     auto_approve_max_total: Decimal
+    hidden_chars: int = 0
 
 
 def _collapse(text: str) -> str:
@@ -227,6 +228,14 @@ def w8_possible_duplicate(ctx: CheckContext) -> list[CheckResult]:
     return [_result("W8", "fail", message, "invoice_number")]
 
 
+def w9_hidden_text(ctx: CheckContext) -> list[CheckResult]:
+    """Invisible text was removed before extraction; a possible prompt injection."""
+    if ctx.hidden_chars:
+        message = f"{ctx.hidden_chars} invisible characters were removed before extraction"
+        return [_result("W9", "fail", message)]
+    return [_result("W9", "pass", "no invisible text")]
+
+
 def run_checks(ctx: CheckContext) -> list[CheckResult]:
     """All hard checks and warnings in SPEC order."""
     return [
@@ -244,6 +253,7 @@ def run_checks(ctx: CheckContext) -> list[CheckResult]:
         *w6_large_total(ctx),
         *w7_unverifiable(ctx),
         *w8_possible_duplicate(ctx),
+        *w9_hidden_text(ctx),
     ]
 
 

@@ -1,0 +1,855 @@
+{
+  "id": "invoiceEvents001",
+  "versionId": "f94a8c05-1e5e-592d-bd2f-1d734d573b2f",
+  "name": "invoice_events",
+  "nodes": [
+    {
+      "id": "1690de18-4798-5c77-b7b4-0d17be590dad",
+      "name": "Event webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "invoice-events",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "6ddbca40-cd9f-59b9-8f35-2b31edf61e28"
+    },
+    {
+      "id": "6073fab7-b45b-542f-864e-6794f3c25d5b",
+      "name": "Secret matches",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        220,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "aaaf886f-a13c-5b04-99e3-30f81cb80dd5",
+              "leftValue": "={{ $env.N8N_WEBHOOK_SECRET }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "75f865a8-c4dc-519d-9030-3f603c9fc433",
+              "leftValue": "={{ $json.headers['x-webhook-secret'] }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "={{ $env.N8N_WEBHOOK_SECRET }}"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "1c4ce562-ec1e-599c-b585-ce3befafe646",
+      "name": "Reject",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        440,
+        520
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"ok\": false, \"error\": \"unauthorized\" } }}",
+        "options": {
+          "responseCode": 401
+        }
+      }
+    },
+    {
+      "id": "03534ae6-395f-56fd-90f7-352cb26c1605",
+      "name": "Route by event",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        440,
+        260
+      ],
+      "parameters": {
+        "mode": "rules",
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d3dccb75-fd2f-53e5-9998-39c785d73ced",
+                    "leftValue": "={{ $json.body.event_type }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "needs_review"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "needs_review"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c252cca1-ab39-5693-a104-ca92aa76fe4f",
+                    "leftValue": "={{ $json.body.event_type }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "approved"
+                  },
+                  {
+                    "id": "1ad5c344-ca12-5354-b50d-c395f3e3e2fc",
+                    "leftValue": "={{ $json.body.event_type }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "auto_approved"
+                  }
+                ],
+                "combinator": "or"
+              },
+              "renameOutput": true,
+              "outputKey": "approved"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "3c5404ef-e678-5244-87a6-4836350b40bc",
+                    "leftValue": "={{ $json.body.event_type }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "failed"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "failed"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c5938c4e-d886-5952-9759-97ad37f378ea",
+                    "leftValue": "={{ $json.body.event_type }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "skipped"
+                  },
+                  {
+                    "id": "542fbce4-35b2-5b0c-9d97-8230d31c4aae",
+                    "leftValue": "={{ $json.body.payload.reason }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "unsupported_type"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "credit_note"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "ignored"
+        }
+      }
+    },
+    {
+      "id": "9287ac19-2ddf-5546-9616-075bb2b6b6e0",
+      "name": "Slack set (review)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        700,
+        40
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2263850d-d6c3-513d-999f-ce8c8530a13a",
+              "leftValue": "={{ $env.SLACK_WEBHOOK_URL }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "50eeb9a4-8a99-5689-88ff-02697e9991bb",
+      "name": "Slack: needs review",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        920,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ { text: `:mag: Invoice needs review: ${$('Event webhook').first().json.body.payload.vendor ?? 'unknown vendor'} ${$('Event webhook').first().json.body.payload.invoice_number ?? ''} ${$('Event webhook').first().json.body.payload.total ?? ''} ${$('Event webhook').first().json.body.payload.currency ?? ''}. Flags: ${($('Event webhook').first().json.body.payload.flags || []).join(', ') || 'none'}. <${$('Event webhook').first().json.body.review_url}|Open>` } }}",
+        "options": {
+          "timeout": 15000
+        }
+      }
+    },
+    {
+      "id": "4f3132e6-3508-5f7b-9ef0-14cc05eea27e",
+      "name": "Done (review)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1140,
+        40
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"ok\": true, \"exported\": false } }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "490f1f97-f359-5090-9d67-a73aab44d8dc",
+      "name": "Sheets row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        220
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// One row per invoice; keys match the header row of the Invoices sheet.\nconst event = $input.first().json.body;\nconst p = event.payload;\nconst columns = ['invoice_id', 'document_id', 'vendor', 'vendor_tax_id', 'invoice_number',\n  'invoice_date', 'due_date', 'currency', 'subtotal', 'discount', 'shipping', 'tax_total',\n  'total', 'approval_mode', 'approved_by', 'approved_at'];\nconst row = Object.fromEntries(columns.map((c) => [c, p[c] ?? '']));\nrow.review_url = event.review_url;\nreturn [{ json: row }];\n"
+      }
+    },
+    {
+      "id": "ac47cc4d-2e78-5875-8d20-3bb681134c4f",
+      "name": "Sheet configured",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        920,
+        220
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3a96c96c-3617-5ded-b826-6f5567e2d687",
+              "leftValue": "={{ $env.GOOGLE_SHEET_ID }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "d814ee75-c597-5f29-af11-2c476ed02c67",
+      "name": "Google Sheets: append or update",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1140,
+        180
+      ],
+      "parameters": {
+        "resource": "sheet",
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $env.GOOGLE_SHEET_ID }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Invoices"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "invoice_id"
+          ],
+          "schema": []
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED"
+        }
+      }
+    },
+    {
+      "id": "279f40ac-7d40-5ad3-90cf-21bf6ddd0670",
+      "name": "Slack set (approved)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1360,
+        180
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2263850d-d6c3-513d-999f-ce8c8530a13a",
+              "leftValue": "={{ $env.SLACK_WEBHOOK_URL }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "ff7b8d2b-6bc3-5e0e-a18c-d2fd3747155b",
+      "name": "Slack: approved",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1580,
+        140
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ { text: `:white_check_mark: Invoice ${$('Event webhook').first().json.body.event_type === 'auto_approved' ? 'auto-approved' : 'approved'}: ${$('Event webhook').first().json.body.payload.vendor} ${$('Event webhook').first().json.body.payload.invoice_number} ${$('Event webhook').first().json.body.payload.total} ${$('Event webhook').first().json.body.payload.currency}. <${$('Event webhook').first().json.body.review_url}|Open>` } }}",
+        "options": {
+          "timeout": 15000
+        }
+      }
+    },
+    {
+      "id": "7d7ef580-e3a5-595c-ab6b-da9f7211785d",
+      "name": "Exported",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1800,
+        180
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"ok\": true, \"exported\": true } }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "8335cd35-55d1-5a2a-9b13-5b5bc28c2771",
+      "name": "Not exported",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1140,
+        300
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"ok\": true, \"exported\": false } }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "cde66d4f-64fa-5d13-bf10-23fa6cc83b58",
+      "name": "Slack set (failed)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        700,
+        420
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2263850d-d6c3-513d-999f-ce8c8530a13a",
+              "leftValue": "={{ $env.SLACK_WEBHOOK_URL }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "598fbc96-5d8d-50f1-a966-1a2deb3d8f2a",
+      "name": "Slack: failed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        920,
+        400
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ { text: `:x: Document failed (${$('Event webhook').first().json.body.payload.reason}). The original is kept. <${$('Event webhook').first().json.body.review_url}|Open>` } }}",
+        "options": {
+          "timeout": 15000
+        }
+      }
+    },
+    {
+      "id": "e2954dbc-6ed5-5e31-bbba-6a98e566f44d",
+      "name": "Done (failed)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1140,
+        440
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"ok\": true, \"exported\": false } }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "ce77a434-6b69-56e7-8a27-75b44656f45e",
+      "name": "Slack set (credit note)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        700,
+        580
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2263850d-d6c3-513d-999f-ce8c8530a13a",
+              "leftValue": "={{ $env.SLACK_WEBHOOK_URL }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "1ca5e78c-59e4-5437-a20b-202303448821",
+      "name": "Slack: credit note",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        920,
+        560
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ { text: `:information_source: Credit note skipped; credit notes are not processed in v1. <${$('Event webhook').first().json.body.review_url}|Open>` } }}",
+        "options": {
+          "timeout": 15000
+        }
+      }
+    },
+    {
+      "id": "30ccb37d-4d02-5dda-9ad2-d845f07e6400",
+      "name": "Done (credit note)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1140,
+        600
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"ok\": true, \"exported\": false } }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "f55c83e0-3971-5d42-b652-981298785f9e",
+      "name": "Ignored",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        700,
+        740
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"ok\": true, \"exported\": false } }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Event webhook": {
+      "main": [
+        [
+          {
+            "node": "Secret matches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Secret matches": {
+      "main": [
+        [
+          {
+            "node": "Route by event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reject",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by event": {
+      "main": [
+        [
+          {
+            "node": "Slack set (review)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sheets row",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack set (failed)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack set (credit note)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ignored",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack set (review)": {
+      "main": [
+        [
+          {
+            "node": "Slack: needs review",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Done (review)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack: needs review": {
+      "main": [
+        [
+          {
+            "node": "Done (review)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sheets row": {
+      "main": [
+        [
+          {
+            "node": "Sheet configured",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sheet configured": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets: append or update",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Not exported",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets: append or update": {
+      "main": [
+        [
+          {
+            "node": "Slack set (approved)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack set (approved)": {
+      "main": [
+        [
+          {
+            "node": "Slack: approved",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Exported",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack: approved": {
+      "main": [
+        [
+          {
+            "node": "Exported",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack set (failed)": {
+      "main": [
+        [
+          {
+            "node": "Slack: failed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Done (failed)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack: failed": {
+      "main": [
+        [
+          {
+            "node": "Done (failed)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack set (credit note)": {
+      "main": [
+        [
+          {
+            "node": "Slack: credit note",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Done (credit note)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack: credit note": {
+      "main": [
+        [
+          {
+            "node": "Done (credit note)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "errorWorkflow": "errorHandler0001"
+  },
+  "active": false,
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

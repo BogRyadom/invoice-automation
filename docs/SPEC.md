@@ -117,7 +117,7 @@ failed → approved      (ручной ввод, approval_mode = manual_entry)
 
 Нормализованная модель (Pydantic): `Decimal` для сумм, `date` для дат, код ISO 4217, `vendor_id` или кандидат.
 
-Текстовый путь: pdfplumber с сохранением раскладки (`layout=True`), чтобы соседние колонки, например «From» и «Bill to», не склеивались в одну строку.
+Текстовый путь: pdfplumber с сохранением раскладки (`layout=True`), чтобы соседние колонки, например «From» и «Bill to», не склеивались в одну строку. До отправки в LLM из текста удаляются невидимые символы: шрифт меньше 5pt или светлый текст (яркость выше 0.9), который не лежит на тёмной заливке. Этот же очищенный текст используется для grounding (H4). Число удалённых символов даёт W9.
 
 Правила нормализации (код, без LLM). Неоднозначность не скрывается, а возвращается как issue для проверок W1, W2, W3:
 
@@ -153,6 +153,7 @@ Warnings. Тоже отправляют в `needs_review`, поле подсве
 | W6 | total выше `AUTO_APPROVE_MAX_TOTAL` |
 | W7 | H2 или H3 нельзя выполнить: в документе нет subtotal, total или налога. Счёт без налоговых строк всегда идёт к человеку (решение 2026-10-06: считать налог нулём рискованно, если модель пропустила строку налога и ошиблась в subtotal) |
 | W8 | Возможный дубликат: vendor неизвестен, но совпали номер, сумма и дата с существующим счётом |
+| W9 | В документе найден и удалён невидимый текст: шрифт меньше 5pt или светлый текст не на тёмном фоне (возможная prompt injection) |
 
 Routing:
 
@@ -230,7 +231,8 @@ RLS включён на всех таблицах, политик нет: рол
 | Malformed JSON или schema не прошла (в том числе `json_validate_failed` от Groq) | Одна repair-попытка с текстом ошибок. Затем `failed: invalid_extraction` |
 | Worker упал во время processing (или Storage недоступен) | `locked_at` старше `PROCESSING_TIMEOUT`: задача возвращается в очередь. После `WORKER_MAX_ATTEMPTS` попыток `failed: processing_timeout` |
 | Provider отклоняет все запросы (ключ, дневной лимит) | Текущий документ `failed: llm_unavailable`, worker делает паузу 10 минут, чтобы не провалить всю очередь подряд |
-| n8n webhook или Slack недоступны | Outbox: до 5 попыток. Статус документа не меняется. Недоставленные события видны в stats |
+| n8n webhook или Slack недоступны | Outbox: до 5 попыток с паузой 30 с × 2^попытка. Статус документа не меняется. Недоставленные события видны в stats |
+| Google Sheets не подключён (`GOOGLE_SHEET_ID` пуст) | n8n отвечает `{"exported": false}`: событие считается доставленным, но документ не переходит в `exported` |
 
 Общие правила: ни один retry не бесконечен. Оригинал не удаляется ни при каком исходе. Любой `failed` виден в UI с действиями Reprocess и Enter manually.
 
@@ -238,25 +240,27 @@ RLS включён на всех таблицах, политик нет: рол
 
 | Метод | Назначение |
 |---|---|
-| `POST /api/documents` | Multipart: файл и метаданные письма. Auth: shared secret в заголовке. Идемпотентен |
+| `POST /api/documents` | Multipart: файл и метаданные письма. Auth: shared secret в заголовке `X-Ingest-Secret`. Идемпотентен: 202 для нового документа, 200 для повторной доставки. 413 выше `INGEST_MAX_FILE_MB`, 503 если Storage или БД недоступны (n8n повторит). Оригинал хранится по пути `originals/<sha256[:2]>/<sha256>`, один объект на одинаковое содержимое |
 | `GET /api/documents?status=` | Список для очереди |
 | `GET /api/documents/{id}` | Extraction, проверки, события, signed URL на PDF |
 | `POST /api/documents/{id}/approve` | Итоговые значения полей, опционально override и комментарий |
 | `POST /api/documents/{id}/reject` | Причина обязательна |
 | `POST /api/documents/{id}/reprocess` | Только из `failed` |
 | `GET /api/invoices/export.csv` | Фильтр по датам |
-| `GET /api/stats` | Данные для экрана Stats |
+| `GET /api/stats` | Данные для экрана Stats: документы по статусам, review rate по переходам `processing → needs_review/auto_approved`, edit rate по полям среди одобренных человеком, failures по причинам, outbox pending и undeliverable. Доли как hits/total |
 | `GET /health` | Проверка API и БД |
 
 ## 12. n8n workflows
 
-Экспортируются в `n8n/` в виде JSON без credentials.
+Экспортируются в `n8n/` в виде JSON без credentials. n8n 2.42.3 работает локально в docker compose; `make n8n-import` загружает workflows и публикует `invoice_events`. Gmail и Sheets credentials создаются в UI n8n (см. `docs/integrations.md`). Workflows берут адреса и секреты из env контейнера n8n: `API_URL`, `INGEST_SHARED_SECRET`, `N8N_WEBHOOK_SECRET`, `SLACK_WEBHOOK_URL`, `GOOGLE_SHEET_ID`. Если `SLACK_WEBHOOK_URL` пуст, сообщения в Slack пропускаются; если пуст `GOOGLE_SHEET_ID`, строка в Sheets не пишется.
 
 1. `invoice_ingest`: Gmail Trigger (label `Invoices/Inbox`, с вложениями) → разбить по вложениям → оставить PDF → `POST /api/documents` → label `Invoices/Received`.
 2. `invoice_events`: Webhook с проверкой секрета → switch по типу события. `needs_review`: Slack со ссылкой на экран документа. `approved` и `auto_approved`: Google Sheets (append or update по invoice id) и Slack. `failed`: Slack alert.
 3. `error_handler`: Error Trigger → Slack.
 
-Запись в Sheets идёт через append or update, чтобы повторная доставка события не создала вторую строку.
+Запись в Sheets идёт через append or update по `invoice_id`, чтобы повторная доставка события не создала вторую строку. `invoice_events` отвечает `{"exported": true}` только после записи строки; только тогда API переводит одобренный документ в `exported` и ставит `invoices.exported_at`.
+
+Для локальной работы без почты `make demo-send` отправляет корпус в `POST /api/documents` так же, как это делает n8n. Для демо с Gmail `scripts/gmail_seed.py` кладёт письма с корпусом в demo-ящик через Gmail API (`messages.insert`), отправлять письма никому не нужно.
 
 ## 13. Review UI (Next.js)
 
@@ -264,7 +268,9 @@ RLS включён на всех таблицах, политик нет: рол
 2. **Document.** Слева PDF (signed URL). Справа форма: у каждого поля статус (ok, warning, error), текст проверки и raw-значение рядом с нормализованным. Таблица line items. Баннер дубликата со ссылкой. Кнопки Approve, Reject, Reprocess. Override с обязательным комментарием. Внизу timeline событий.
 3. **Stats.** Количество по статусам, review rate, edit rate по полям, failures по причинам, недоставленные outbox-события.
 
-Auth: Supabase Auth. Все review endpoints требуют JWT.
+Auth: Supabase Auth. Все review endpoints требуют JWT. API проверяет подпись по опубликованным ключам проекта (JWKS, ES256 или RS256), audience `authenticated` и issuer `SUPABASE_PUBLIC_URL/auth/v1`. Регистрация из UI выключена, рецензентов создают в Supabase Studio.
+
+Approve принимает итоговые значения полей. Сервер заново прогоняет H1, H2, H3, H5 (только среди уже одобренных счетов) и H6; grounding и warnings к значениям, введённым человеком, не применяются. Новый vendor создаётся при одобрении, новое написание выбранного vendor сохраняется как alias, выбранный формат даты сохраняется у vendor. Изменённые поля пишутся в `review_edits`. Approve документа в `failed` означает ручной ввод (`manual_entry`). Reprocess сбрасывает attempts.
 
 ## 14. Тестовый корпус и eval
 
@@ -317,10 +323,10 @@ Auth: Supabase Auth. Все review endpoints требуют JWT.
 
 ## 15. Security
 
-- Shared secret в обе стороны: n8n → API и API → n8n webhook. Сравнение constant-time.
+- Shared secret в обе стороны: n8n → API (`X-Ingest-Secret`, сравнение constant-time в API) и API → n8n webhook (`X-Webhook-Secret`, проверка в первом узле workflow). Без настроенного секрета приём отвечает 503.
 - Storage private. Превью PDF только через короткоживущий signed URL.
 - Лимиты размера и числа страниц. Тип файла проверяется по magic bytes.
-- Prompt injection: текст документа идёт в отделённом блоке данных, у модели нет tools, выход ограничен схемой. Искажённые поля ловятся H2, H3, H4. Сценарий есть в корпусе. Известный пробел: если подставные значения напечатаны в самом документе скрытым текстом, H4 их находит и не срабатывает (см. вопрос 21.5).
+- Prompt injection: текст документа идёт в отделённом блоке данных, у модели нет tools, выход ограничен схемой. Невидимый текст удаляется до LLM, такой документ всегда идёт в review (W9). Искажённые поля ловятся H2, H3, H4. Сценарий есть в корпусе. Ограничение: текст, спрятанный под картинкой или белым прямоугольником, этим правилом не находится.
 - В логах нет полного текста документов. Секреты только в env, в репо `.env.example`.
 
 ## 16. Tests, CI, запуск
@@ -328,7 +334,7 @@ Auth: Supabase Auth. Все review endpoints требуют JWT.
 - `pytest`. Unit: нормализация чисел и дат (table-driven), vendor, проверки H и W, routing, переходы статусов, идемпотентный ingest, дубликаты, retry policy.
 - Integration: pipeline на всём корпусе с fake provider и записанными ответами модели; worker на временной БД (очередь, повторы, дубликаты, блокировки).
 - CI (GitHub Actions): `ruff`, `pytest`, для web `eslint` и `tsc`.
-- Локальный запуск одной командой: `make up` поднимает локальный Supabase и через docker compose api, worker, web. `.env.example` полный.
+- Локальный запуск одной командой: `make up` поднимает локальный Supabase и через docker compose api, worker, web и n8n. `.env.example` полный.
 
 Структура репозитория:
 
@@ -406,4 +412,4 @@ docs/                 SPEC.md, architecture, screenshots
 2. Supabase: hosted-проект или локальный стек через Supabase CLI для разработки. **Решено:** локальный стек, CI на чистом Postgres, hosted-проекта нет (решение 14).
 3. Нужен ли публичный live demo. **Решено:** нет, только video, скриншоты и воспроизводимый локальный запуск.
 4. Vision-путь: Groq принимает не больше 3 изображений в запросе. Что делать со сканами длиннее 3 страниц. **Решено на Этапе 2:** лимит задаётся настройкой `LLM_MAX_VISION_PAGES` (для Groq 3), более длинные сканы получают `failed: too_large` и вводятся вручную. Склейка ответов по частям отклонена: ошибки на стыках страниц.
-5. Скрытый текст и prompt injection (найдено на Этапе 3). Подставные значения, напечатанные в документе невидимым или крошечным шрифтом, проходят grounding (H4). Подмена суммы ловится H2, но подмена только номера счёта у известного vendor может пройти auto-approve. Варианты: убирать из текста для LLM и для H4 символы меньше заданного размера или почти белого цвета; или отдельное предупреждение, если в тексте есть фразы-команды для AI. Решить до Этапа 5.
+5. Скрытый текст и prompt injection (найдено на Этапе 3). Подставные значения, напечатанные невидимым шрифтом, проходили grounding (H4). **Решено на Этапе 4:** невидимый текст удаляется до LLM и до H4, документ уходит в review с W9.
