@@ -4,10 +4,10 @@ API = uv --directory api
 PY = uv run --project api
 WEB = npm --prefix web
 
-.PHONY: help install db-start db-stop db-reset up down logs lint fmt test corpus eval eval-smoke eval-oracle demo-send n8n-import
+.PHONY: help install db-start db-stop db-reset up down logs lint fmt test corpus eval eval-smoke eval-oracle demo-send demo-vendors n8n-import
 
 help:
-	@echo Targets: install db-start db-stop db-reset up down logs lint fmt test corpus eval eval-smoke eval-oracle demo-send n8n-import
+	@echo Targets: install db-start db-stop db-reset up down logs lint fmt test corpus eval eval-smoke eval-oracle demo-send demo-vendors n8n-import
 
 install:
 	npm ci
@@ -67,6 +67,10 @@ eval-oracle:
 # Add ARGS="--fresh" to send it again as new e-mails.
 demo-send:
 	$(PY) python -m scripts.demo_send $(ARGS)
+
+# Adds the fictional known vendors to the local database so the demo can auto-approve.
+demo-vendors:
+	$(PY) python -m scripts.demo_vendors
 
 # Loads the workflows from n8n/ into the local n8n and publishes the events webhook.
 # invoice_ingest is published from the n8n UI once its Gmail credential is set.

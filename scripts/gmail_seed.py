@@ -7,7 +7,7 @@ import argparse
 import base64
 import sys
 from collections.abc import Sequence
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from email.message import EmailMessage
 from email.utils import format_datetime, make_msgid
 from typing import Any
@@ -24,6 +24,8 @@ SECRETS_DIR = REPO_ROOT / ".secrets"
 CLIENT_FILE = SECRETS_DIR / "google_oauth_client.json"
 TOKEN_FILE = SECRETS_DIR / "gmail_token.json"
 INBOX_LABEL = "Invoices/Inbox"
+# The fictional company the corpus invoices are billed to.
+DEFAULT_RECIPIENT = "accounts-payable@lumen-harbor.example"
 WORKFLOW_LABELS = ("Invoices/Received", "Invoices/No-attachment", "Invoices/Ingest-failed")
 
 
@@ -107,13 +109,32 @@ def ensure_labels(service: Any, names: Sequence[str]) -> dict[str, str]:
     return ids
 
 
+def labels_named(labels: dict[str, str]) -> list[str]:
+    """Names of the labels this project uses."""
+    return [name for name in (INBOX_LABEL, *WORKFLOW_LABELS) if name in labels]
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Insert the corpus e-mails into the demo inbox under the Invoices/Inbox label."""
     parser = argparse.ArgumentParser(
         description="Fill a demo Gmail inbox with the synthetic corpus."
     )
-    parser.add_argument("--to", required=True, help="address of the demo inbox")
+    parser.add_argument(
+        "--to",
+        default=DEFAULT_RECIPIENT,
+        help="To header of the inserted e-mails (the inbox is the authorised account)",
+    )
     parser.add_argument("--docs", nargs="*", help="document ids to insert (default: all)")
+    parser.add_argument(
+        "--labels-only",
+        action="store_true",
+        help="only create the Invoices/* labels, insert no e-mails",
+    )
+    parser.add_argument(
+        "--no-attachment",
+        action="store_true",
+        help="also insert one e-mail without a PDF",
+    )
     args = parser.parse_args(argv)
 
     if not CLIENT_FILE.exists():
@@ -121,13 +142,20 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 1
     service = gmail_service()
     labels = ensure_labels(service, [INBOX_LABEL, *WORKFLOW_LABELS])
+    if args.labels_only:
+        print(f"Labels ready: {', '.join(labels_named(labels))}")
+        return 0
     label_ids = ["INBOX", "UNREAD", labels[INBOX_LABEL]]
 
     now = datetime.now(UTC)
     docs = [doc for doc in load_corpus() if not args.docs or doc.doc_id in args.docs]
-    messages = [invoice_message(doc, args.to, now) for doc in docs]
-    if not args.docs:
-        messages.append(message_without_attachment(args.to, now))
+    # One second apart, so documents keep corpus order when the worker sorts by arrival.
+    messages = [
+        invoice_message(doc, args.to, now + timedelta(seconds=index))
+        for index, doc in enumerate(docs)
+    ]
+    if args.no_attachment:
+        messages.append(message_without_attachment(args.to, now + timedelta(seconds=len(docs))))
     for message in messages:
         service.users().messages().insert(
             userId="me",
@@ -135,7 +163,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             internalDateSource="receivedTime",
         ).execute()
         print(f"inserted: {message['Subject']}")
-    print(f"{len(messages)} messages are in {INBOX_LABEL}. Labels: {labels}")
+    print(f"{len(messages)} messages are in {INBOX_LABEL}.")
     return 0
 
 

@@ -6,10 +6,11 @@ from typing import Any
 import httpx
 import pytest
 from pydantic import SecretStr
+from sqlalchemy import Engine, text
 
 from app.config import Settings
 from corpus.storage import document_path, load_corpus
-from scripts import demo_send, gmail_seed
+from scripts import demo_send, demo_vendors, gmail_seed
 
 DOCS = {doc.doc_id: doc for doc in load_corpus()}
 NOW = datetime(2026, 10, 6, 9, 0, tzinfo=UTC)
@@ -60,3 +61,13 @@ def test_demo_send_posts_each_document_like_n8n(
     body = requests[0].content
     assert b'name="gmail_message_id"' in body and b"demo-clean_01" in body
     assert b'filename="clean_01.pdf"' in body
+
+
+@pytest.mark.db
+def test_demo_vendors_are_seeded_once(migrated_engine: Engine) -> None:
+    first = demo_vendors.seed(migrated_engine)
+    second = demo_vendors.seed(migrated_engine)
+
+    with migrated_engine.connect() as conn:
+        count = conn.execute(text("SELECT count(*) FROM vendors")).scalar_one()
+    assert (first, second, count) == (6, 0, 6)

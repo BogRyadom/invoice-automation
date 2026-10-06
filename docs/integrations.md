@@ -73,12 +73,32 @@ e-mail and password and confirm the user. Sign-up from the UI is disabled.
 ## 7. Fill the demo inbox
 
 ```sh
-uv run --project api python -m scripts.gmail_seed --to <demo address>
+# once: create the Invoices/* labels (opens a browser for Google consent)
+uv run --project api python -m scripts.gmail_seed --labels-only
+# once: register the fictional vendors, so their invoices can be auto-approved
+make demo-vendors
+# insert e-mails for chosen corpus documents, plus one without an attachment
+uv run --project api python -m scripts.gmail_seed --docs clean_02 clean_09 european_01 --no-attachment
 ```
 
-A browser window asks for consent (choose the demo account, accept the unverified-app warning).
-The script inserts one e-mail per corpus document plus one e-mail without an attachment, all
-under `Invoices/Inbox`. Within a minute n8n picks them up and hands the PDFs to the API.
+The consent screen shows an "unverified app" warning: choose the demo account, **Advanced**,
+then continue. Without `--docs` the whole corpus is inserted (about 50 000 LLM tokens). Each
+e-mail is inserted directly into the inbox under `Invoices/Inbox`; nothing is sent. Within a
+minute n8n picks them up and hands the PDFs to the API. Auto-approval also needs
+`AUTO_APPROVE_ENABLED=true` in `.env` (restart the worker after changing it).
+
+A file the system has already seen is skipped as `duplicate_file`, so a document from the corpus
+reaches the LLM only once per database.
+
+## Where to look
+
+| What | Where |
+|---|---|
+| E-mails picked up | Gmail: label `Invoices/Received` (or `Invoices/No-attachment`) |
+| Notifications | Slack channel `#invoices` |
+| Approved invoices | the `Invoices` sheet, one row per invoice |
+| Each n8n run | <http://localhost:5678> → **Executions** |
+| Documents, checks, events | Supabase Studio → Table Editor: `documents`, `check_results`, `document_events`, `outbox_events` |
 
 ## What goes where
 
