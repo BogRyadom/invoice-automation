@@ -1,0 +1,117 @@
+{
+  "doc_id": "european_02",
+  "filename": "european_02.pdf",
+  "group": "european",
+  "description": "German invoice, unambiguous dates",
+  "email": {
+    "sender": "rechnung@halvren-maschinenbau.example",
+    "subject": "Rechnung RE-2026-0412",
+    "received_at": "2026-04-17T09:36:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Halvren Maschinenbau GmbH",
+    "vendor_tax_id_raw": "ZZ918273645",
+    "invoice_number_raw": "RE-2026-0412",
+    "invoice_date_raw": "16.04.2026",
+    "due_date_raw": "16.05.2026",
+    "currency_raw": "EUR",
+    "subtotal_raw": "869,20",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "MwSt. 19 %",
+        "amount_raw": "165,15"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "1.034,35",
+    "line_items": [
+      {
+        "description": "Antriebswelle Typ AW-40",
+        "quantity_raw": "2",
+        "unit_price_raw": "186,00",
+        "amount_raw": "372,00"
+      },
+      {
+        "description": "Zahnriemen HTD 8M-1200",
+        "quantity_raw": "6",
+        "unit_price_raw": "41,20",
+        "amount_raw": "247,20"
+      },
+      {
+        "description": "Wartungspauschale",
+        "quantity_raw": "1",
+        "unit_price_raw": "250,00",
+        "amount_raw": "250,00"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "halvren maschinenbau",
+    "vendor_tax_id": "ZZ918273645",
+    "invoice_number": "RE20260412",
+    "invoice_date": "2026-04-16",
+    "due_date": "2026-05-16",
+    "currency": "EUR",
+    "subtotal": "869.20",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "165.15",
+    "total": "1034.35",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Antriebswelle Typ AW-40",
+        "quantity": "2",
+        "unit_price": "186.00",
+        "amount": "372.00"
+      },
+      {
+        "description": "Zahnriemen HTD 8M-1200",
+        "quantity": "6",
+        "unit_price": "41.20",
+        "amount": "247.20"
+      },
+      {
+        "description": "Wartungspauschale",
+        "quantity": "1",
+        "unit_price": "250.00",
+        "amount": "250.00"
+      }
+    ]
+  },
+  "route": {
+    "status": "auto_approved",
+    "reason": null,
+    "flags": [],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "split",
+    "language": "de",
+    "vendor_address": [
+      "Eisenstraße 14",
+      "ZZ-73012 Brakfeld"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Kreditorenbuchhaltung",
+      "Salzwiese 7",
+      "ZZ-20417 Port Elnor"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

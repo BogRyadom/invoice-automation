@@ -96,6 +96,7 @@ failed → approved      (ручной ввод, approval_mode = manual_entry)
   "discount_raw": null,
   "shipping_raw": null,
   "tax_lines": [{"label": "VAT 10%", "amount_raw": "120.00"}],
+  "tax_inclusive_note_raw": null,
   "total_raw": "1,320.00",
   "line_items": [
     {"description": "Widget", "quantity_raw": "2", "unit_price_raw": "600.00", "amount_raw": "1,200.00"}
@@ -107,6 +108,7 @@ failed → approved      (ручной ввод, approval_mode = manual_entry)
 
 - `document_type`: `invoice | credit_note | other`.
 - Поле отсутствует в документе: `null`. Ничего не вычислять и не достраивать.
+- `tax_inclusive_note_raw`: дословная фраза из документа о том, что цены включают налог (например, «All prices include VAT at 20%»), иначе `null`. Модель только копирует текст, вывод о формуле делает код (H2).
 - Поля confidence в схеме нет.
 - Текст документа передаётся как данные в отделённом блоке. У модели нет tools.
 - Сырой ответ модели сохраняется в `extractions.raw_output` вместе с provider, model, prompt_version, latency и токенами.
@@ -122,9 +124,9 @@ Hard checks. Провал любой отправляет документ в `n
 | ID | Проверка | Правило |
 |---|---|---|
 | H1 | Обязательные поля | vendor_name, invoice_number, invoice_date, total, currency заполнены и нормализуются |
-| H2 | Итог | subtotal - discount + shipping + sum(tax_lines) = total, допуск `AMOUNT_TOLERANCE` (по умолчанию 0.02) |
+| H2 | Итог | subtotal - discount + shipping + sum(tax_lines) = total, допуск `AMOUNT_TOLERANCE` (по умолчанию 0.02). Если задан `tax_inclusive_note_raw`, налог уже внутри сумм: subtotal - discount + shipping = total |
 | H3 | Line items | sum(line_items.amount) = subtotal с тем же допуском, если line items есть |
-| H4 | Grounding (текстовый путь) | raw-значения invoice_number, total и invoice_date дословно присутствуют в извлечённом тексте после нормализации пробелов |
+| H4 | Grounding (текстовый путь) | raw-значения invoice_number, total, invoice_date и, если задан, tax_inclusive_note_raw дословно присутствуют в извлечённом тексте после нормализации пробелов |
 | H5 | Дубликат счёта | (vendor_id, invoice_number_normalized) уже существует. В review со ссылкой на существующую запись |
 | H6 | Даты | invoice_date не в будущем (допуск 1 день), due_date не раньше invoice_date |
 
@@ -265,17 +267,31 @@ Auth: Supabase Auth. Все review endpoints требуют JWT.
 - 1 с внедрённой инструкцией в тексте (prompt injection)
 - 1 с арифметической ошибкой в самом документе
 
+Устройство корпуса:
+
+- Описания документов в коде (`corpus/definitions.py`) → `corpus/ground_truth/*.json` → PDF в `corpus/documents/` рендерятся из JSON. `make corpus` пересоздаёт всё детерминированно.
+- PDF коммитятся в репозиторий, чтобы у всех были одинаковые входные файлы.
+- Каждый ground truth хранит значения как напечатаны (ожидаемый ответ LLM), нормализованные значения (для exact match) и ожидаемый маршрут: статус, причину и флаги проверок.
+- Счета на английском, 3 европейских на немецком. Налоговые номера с несуществующим префиксом `ZZ`, e-mail на домене `.example`.
+- `corpus/manifest.json`: порядок обработки (дубликаты после оригиналов) и sha256 файлов.
+
+Контекст прогона eval: полный pipeline на временной чистой БД, известные vendors заранее загружаются из `corpus/vendors_seed.json`, документы идут в порядке manifest, `AUTO_APPROVE_ENABLED=true` только внутри eval. Без известных vendors все документы ушли бы в review из-за W4.
+
 `eval/run_eval.py` считает:
 
 - точность по каждому полю после нормализации (exact match)
 - line items: совпадение количества строк и сумм
 - точность определения типа документа
-- review rate
-- auto-approve precision: доля авто-одобренных, где все ключевые поля верны
+- review rate: needs_review / (needs_review + auto_approved); skipped и failed не входят
+- auto-approve precision: доля авто-одобренных, где все ключевые поля верны. Ключевые поля = поля H1: vendor, номер, дата, total, валюта
 - долю документов с ошибкой в поле, которые проверки отправили в review
 - latency и токены на документ
 
-Результат сохраняется в `eval/results/` с датой, provider и model. Раздел Results в README берётся только оттуда, с указанием размера корпуса и того, что он синтетический.
+Доли хранятся как пары hits/total, без float.
+
+Результат сохраняется в `eval/results/` с датой, provider и model (JSON и Markdown, существующий файл не перезаписывается). Раздел Results в README берётся только оттуда, с указанием размера корпуса и того, что он синтетический.
+
+`make eval-oracle` проверяет сам каркас eval: ответы берутся прямо из ground truth, все метрики точности должны быть 100%. Его результаты никогда не сохраняются.
 
 Реальная LLM вызывается только в eval (`make eval`). В CI её нет.
 

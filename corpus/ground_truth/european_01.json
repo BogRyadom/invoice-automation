@@ -1,0 +1,119 @@
+{
+  "doc_id": "european_01",
+  "filename": "european_01.pdf",
+  "group": "european",
+  "description": "German invoice, ambiguous numeric dates",
+  "email": {
+    "sender": "rechnung@halvren-maschinenbau.example",
+    "subject": "Rechnung RE-2026-0318",
+    "received_at": "2026-03-05T09:35:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Halvren Maschinenbau GmbH",
+    "vendor_tax_id_raw": "ZZ918273645",
+    "invoice_number_raw": "RE-2026-0318",
+    "invoice_date_raw": "04.03.2026",
+    "due_date_raw": "03.04.2026",
+    "currency_raw": "EUR",
+    "subtotal_raw": "607,00",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "MwSt. 19 %",
+        "amount_raw": "115,33"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "722,33",
+    "line_items": [
+      {
+        "description": "Kugellager 6204-2RS",
+        "quantity_raw": "50",
+        "unit_price_raw": "4,80",
+        "amount_raw": "240,00"
+      },
+      {
+        "description": "Dichtungssatz DS-12",
+        "quantity_raw": "4",
+        "unit_price_raw": "23,50",
+        "amount_raw": "94,00"
+      },
+      {
+        "description": "Montage vor Ort (Stunden)",
+        "quantity_raw": "3,5",
+        "unit_price_raw": "78,00",
+        "amount_raw": "273,00"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "halvren maschinenbau",
+    "vendor_tax_id": "ZZ918273645",
+    "invoice_number": "RE20260318",
+    "invoice_date": "2026-03-04",
+    "due_date": "2026-04-03",
+    "currency": "EUR",
+    "subtotal": "607.00",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "115.33",
+    "total": "722.33",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Kugellager 6204-2RS",
+        "quantity": "50",
+        "unit_price": "4.80",
+        "amount": "240.00"
+      },
+      {
+        "description": "Dichtungssatz DS-12",
+        "quantity": "4",
+        "unit_price": "23.50",
+        "amount": "94.00"
+      },
+      {
+        "description": "Montage vor Ort (Stunden)",
+        "quantity": "3.5",
+        "unit_price": "78.00",
+        "amount": "273.00"
+      }
+    ]
+  },
+  "route": {
+    "status": "needs_review",
+    "reason": null,
+    "flags": [
+      "W1"
+    ],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "classic",
+    "language": "de",
+    "vendor_address": [
+      "Eisenstraße 14",
+      "ZZ-73012 Brakfeld"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Kreditorenbuchhaltung",
+      "Salzwiese 7",
+      "ZZ-20417 Port Elnor"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

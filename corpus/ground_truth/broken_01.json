@@ -1,0 +1,37 @@
+{
+  "doc_id": "broken_01",
+  "filename": "broken_01.pdf",
+  "group": "broken",
+  "description": "PDF header followed by garbage",
+  "email": {
+    "sender": "accounts@velmora-logistics.example",
+    "subject": "Invoice VL/2026/1051",
+    "received_at": "2026-03-25T09:53:00Z"
+  },
+  "extraction_path": null,
+  "document_type": null,
+  "printed": null,
+  "expected": null,
+  "route": {
+    "status": "failed",
+    "reason": "unreadable_pdf",
+    "flags": [],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "corrupted",
+    "layout": null,
+    "language": "en",
+    "vendor_address": [],
+    "bill_to": [],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": "clean_02"
+  }
+}

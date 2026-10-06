@@ -1,0 +1,117 @@
+{
+  "doc_id": "clean_08",
+  "filename": "clean_08.pdf",
+  "group": "clean",
+  "description": "Printing, ledger layout",
+  "email": {
+    "sender": "invoices@tessaly-print.example",
+    "subject": "Invoice TPW 2026 102",
+    "received_at": "2026-06-24T09:54:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Tessaly Print Works Ltd",
+    "vendor_tax_id_raw": null,
+    "invoice_number_raw": "TPW 2026 102",
+    "invoice_date_raw": "23/06/2026",
+    "due_date_raw": "23/07/2026",
+    "currency_raw": "GBP",
+    "subtotal_raw": "270.00",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "VAT 20%",
+        "amount_raw": "54.00"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "324.00",
+    "line_items": [
+      {
+        "description": "Roll-up banner 850x2000 mm",
+        "quantity_raw": "1",
+        "unit_price_raw": "79.00",
+        "amount_raw": "79.00"
+      },
+      {
+        "description": "Letterheads, 120 gsm (500)",
+        "quantity_raw": "2",
+        "unit_price_raw": "58.00",
+        "amount_raw": "116.00"
+      },
+      {
+        "description": "Poster A2, matt",
+        "quantity_raw": "6",
+        "unit_price_raw": "12.50",
+        "amount_raw": "75.00"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "tessaly print works",
+    "vendor_tax_id": null,
+    "invoice_number": "TPW2026102",
+    "invoice_date": "2026-06-23",
+    "due_date": "2026-07-23",
+    "currency": "GBP",
+    "subtotal": "270.00",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "54.00",
+    "total": "324.00",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Roll-up banner 850x2000 mm",
+        "quantity": "1",
+        "unit_price": "79.00",
+        "amount": "79.00"
+      },
+      {
+        "description": "Letterheads, 120 gsm (500)",
+        "quantity": "2",
+        "unit_price": "58.00",
+        "amount": "116.00"
+      },
+      {
+        "description": "Poster A2, matt",
+        "quantity": "6",
+        "unit_price": "12.50",
+        "amount": "75.00"
+      }
+    ]
+  },
+  "route": {
+    "status": "auto_approved",
+    "reason": null,
+    "flags": [],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "ledger",
+    "language": "en",
+    "vendor_address": [
+      "22 Copperleaf Lane",
+      "Wexmoor, ZZ 11873"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

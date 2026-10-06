@@ -1,0 +1,49 @@
+{
+  "doc_id": "not_invoice_01",
+  "filename": "not_invoice_01.pdf",
+  "group": "not_invoice",
+  "description": "Service agreement that mentions fees",
+  "email": {
+    "sender": "legal@brevik-software.example",
+    "subject": "Signed service agreement",
+    "received_at": "2026-03-02T09:53:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "other",
+  "printed": null,
+  "expected": null,
+  "route": {
+    "status": "skipped",
+    "reason": "not_invoice",
+    "flags": [],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "contract",
+    "layout": null,
+    "language": "en",
+    "vendor_address": [],
+    "bill_to": [],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": "SERVICE AGREEMENT",
+    "paragraphs": [
+      "This Service Agreement is made on 2 March 2026 between Brevik Software Corp., 400 Lantern Hill Avenue, Cordale (the Provider), and Lumen Harbor Trading Ltd, 7 Saltmarsh Row, Port Elnor (the Customer).",
+      "1. Services. The Provider will supply the Analytics Suite platform, premium support and onboarding as described in Schedule A.",
+      "2. Fees. The Customer will pay a monthly fee of 1,200.00 USD. The Provider will issue a separate invoice for each month of service.",
+      "3. Term. This agreement starts on 1 April 2026 and continues for twelve months unless terminated with 60 days written notice.",
+      "4. Confidentiality. Each party will keep the other party's confidential information private and use it only for the purposes of this agreement.",
+      "5. Governing law. This agreement is governed by the laws of the Republic of Zedland."
+    ],
+    "table_rows": [
+      [
+        "For Brevik Software Corp.",
+        "For Lumen Harbor Trading Ltd"
+      ]
+    ],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "canonical_name": "Quorrin Office Supply Inc.",
+    "normalized_name": "quorrin office supply",
+    "tax_id": "ZZ482910376"
+  },
+  {
+    "canonical_name": "Velmora Logistics LLC",
+    "normalized_name": "velmora logistics",
+    "tax_id": "ZZ771034592"
+  },
+  {
+    "canonical_name": "Tessaly Print Works Ltd",
+    "normalized_name": "tessaly print works",
+    "tax_id": null
+  },
+  {
+    "canonical_name": "Brevik Software Corp.",
+    "normalized_name": "brevik software",
+    "tax_id": "ZZ305518847"
+  },
+  {
+    "canonical_name": "Ostberg Facilities Co.",
+    "normalized_name": "ostberg facilities",
+    "tax_id": null
+  },
+  {
+    "canonical_name": "Halvren Maschinenbau GmbH",
+    "normalized_name": "halvren maschinenbau",
+    "tax_id": "ZZ918273645"
+  }
+]

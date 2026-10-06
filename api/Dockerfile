@@ -11,11 +11,11 @@ ENV PYTHONUNBUFFERED=1 \
 WORKDIR /srv
 
 COPY pyproject.toml uv.lock ./
-RUN uv sync --locked --no-dev
+RUN uv sync --locked --no-dev --no-install-project
 
 COPY app ./app
 
-RUN useradd --system --uid 10001 app
+RUN useradd --uid 10001 --no-create-home --shell /usr/sbin/nologin app
 USER app
 
 EXPOSE 8000

@@ -30,9 +30,6 @@ jobs:
           --health-retries 10
     env:
       TEST_DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/postgres
-    defaults:
-      run:
-        working-directory: api
     steps:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10.2.0
@@ -40,10 +37,11 @@ jobs:
           version: "0.12.23"
           enable-cache: true
           cache-dependency-glob: api/uv.lock
-      - run: uv sync --locked
-      - run: uv run ruff check .
-      - run: uv run ruff format --check .
+      - run: uv sync --locked --project api
+      - run: uv run --project api ruff check .
+      - run: uv run --project api ruff format --check .
       - run: uv run pytest
+        working-directory: api
 
   web:
     runs-on: ubuntu-latest

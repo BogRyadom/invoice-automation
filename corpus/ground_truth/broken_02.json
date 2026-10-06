@@ -1,0 +1,78 @@
+{
+  "doc_id": "broken_02",
+  "filename": "broken_02.pdf",
+  "group": "broken",
+  "description": "Password-protected invoice",
+  "email": {
+    "sender": "accounts@velmora-logistics.example",
+    "subject": "Invoice VL/2026/1410",
+    "received_at": "2026-09-23T09:54:00Z"
+  },
+  "extraction_path": null,
+  "document_type": null,
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Velmora Logistics LLC",
+    "vendor_tax_id_raw": "ZZ771034592",
+    "invoice_number_raw": "VL/2026/1410",
+    "invoice_date_raw": "September 22, 2026",
+    "due_date_raw": "October 22, 2026",
+    "currency_raw": "GBP",
+    "subtotal_raw": "141.00",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "VAT 20%",
+        "amount_raw": "28.20"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "169.20",
+    "line_items": [
+      {
+        "description": "Same-day courier, zone 2",
+        "quantity_raw": "2",
+        "unit_price_raw": "38.50",
+        "amount_raw": "77.00"
+      },
+      {
+        "description": "Two-person delivery",
+        "quantity_raw": "1",
+        "unit_price_raw": "64.00",
+        "amount_raw": "64.00"
+      }
+    ]
+  },
+  "expected": null,
+  "route": {
+    "status": "failed",
+    "reason": "encrypted_pdf",
+    "flags": [],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "classic",
+    "language": "en",
+    "vendor_address": [
+      "Unit 4, Fenwick Trade Park",
+      "Hollins Cross, ZZ 31108"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": "corpus-demo",
+    "source_doc_id": null
+  }
+}

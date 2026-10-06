@@ -1,0 +1,513 @@
+{
+  "doc_id": "multipage_02",
+  "filename": "multipage_02.pdf",
+  "group": "multipage",
+  "description": "Thirty-six numbered line items",
+  "email": {
+    "sender": "accounts@velmora-logistics.example",
+    "subject": "Invoice VL/2026/1377",
+    "received_at": "2026-09-17T09:21:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Velmora Logistics LLC",
+    "vendor_tax_id_raw": "ZZ771034592",
+    "invoice_number_raw": "VL/2026/1377",
+    "invoice_date_raw": "16 Sep 2026",
+    "due_date_raw": "16 Oct 2026",
+    "currency_raw": "GBP",
+    "subtotal_raw": "2,494.70",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "VAT 20%",
+        "amount_raw": "498.94"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "2,993.64",
+    "line_items": [
+      {
+        "description": "Customs documentation",
+        "quantity_raw": "3",
+        "unit_price_raw": "55.00",
+        "amount_raw": "165.00"
+      },
+      {
+        "description": "Pallet freight, Hollins Cross to Ardley",
+        "quantity_raw": "2",
+        "unit_price_raw": "145.00",
+        "amount_raw": "290.00"
+      },
+      {
+        "description": "Fuel surcharge",
+        "quantity_raw": "3",
+        "unit_price_raw": "22.40",
+        "amount_raw": "67.20"
+      },
+      {
+        "description": "Weekend collection",
+        "quantity_raw": "2",
+        "unit_price_raw": "45.00",
+        "amount_raw": "90.00"
+      },
+      {
+        "description": "Pick and pack (per order)",
+        "quantity_raw": "3",
+        "unit_price_raw": "2.85",
+        "amount_raw": "8.55"
+      },
+      {
+        "description": "Customs documentation",
+        "quantity_raw": "2",
+        "unit_price_raw": "55.00",
+        "amount_raw": "110.00"
+      },
+      {
+        "description": "Weekend collection",
+        "quantity_raw": "1",
+        "unit_price_raw": "45.00",
+        "amount_raw": "45.00"
+      },
+      {
+        "description": "Weekend collection",
+        "quantity_raw": "3",
+        "unit_price_raw": "45.00",
+        "amount_raw": "135.00"
+      },
+      {
+        "description": "Warehouse storage (pallet-week)",
+        "quantity_raw": "3",
+        "unit_price_raw": "6.75",
+        "amount_raw": "20.25"
+      },
+      {
+        "description": "Weekend collection",
+        "quantity_raw": "1",
+        "unit_price_raw": "45.00",
+        "amount_raw": "45.00"
+      },
+      {
+        "description": "Cross-docking (per pallet)",
+        "quantity_raw": "2",
+        "unit_price_raw": "12.75",
+        "amount_raw": "25.50"
+      },
+      {
+        "description": "Cross-docking (per pallet)",
+        "quantity_raw": "1",
+        "unit_price_raw": "12.75",
+        "amount_raw": "12.75"
+      },
+      {
+        "description": "Tail-lift delivery",
+        "quantity_raw": "1",
+        "unit_price_raw": "30.00",
+        "amount_raw": "30.00"
+      },
+      {
+        "description": "Stock count (per hour)",
+        "quantity_raw": "1",
+        "unit_price_raw": "32.00",
+        "amount_raw": "32.00"
+      },
+      {
+        "description": "Pallet hire (per week)",
+        "quantity_raw": "1",
+        "unit_price_raw": "4.20",
+        "amount_raw": "4.20"
+      },
+      {
+        "description": "Next-day parcel, up to 10 kg",
+        "quantity_raw": "3",
+        "unit_price_raw": "11.90",
+        "amount_raw": "35.70"
+      },
+      {
+        "description": "Timed delivery slot",
+        "quantity_raw": "1",
+        "unit_price_raw": "18.00",
+        "amount_raw": "18.00"
+      },
+      {
+        "description": "Next-day parcel, up to 10 kg",
+        "quantity_raw": "2",
+        "unit_price_raw": "11.90",
+        "amount_raw": "23.80"
+      },
+      {
+        "description": "Timed delivery slot",
+        "quantity_raw": "2",
+        "unit_price_raw": "18.00",
+        "amount_raw": "36.00"
+      },
+      {
+        "description": "Two-person delivery",
+        "quantity_raw": "2",
+        "unit_price_raw": "64.00",
+        "amount_raw": "128.00"
+      },
+      {
+        "description": "Tail-lift delivery",
+        "quantity_raw": "3",
+        "unit_price_raw": "30.00",
+        "amount_raw": "90.00"
+      },
+      {
+        "description": "Cross-docking (per pallet)",
+        "quantity_raw": "2",
+        "unit_price_raw": "12.75",
+        "amount_raw": "25.50"
+      },
+      {
+        "description": "Returns handling (per item)",
+        "quantity_raw": "2",
+        "unit_price_raw": "3.40",
+        "amount_raw": "6.80"
+      },
+      {
+        "description": "Weekend collection",
+        "quantity_raw": "3",
+        "unit_price_raw": "45.00",
+        "amount_raw": "135.00"
+      },
+      {
+        "description": "Packaging materials",
+        "quantity_raw": "3",
+        "unit_price_raw": "16.60",
+        "amount_raw": "49.80"
+      },
+      {
+        "description": "Cross-docking (per pallet)",
+        "quantity_raw": "1",
+        "unit_price_raw": "12.75",
+        "amount_raw": "12.75"
+      },
+      {
+        "description": "Packaging materials",
+        "quantity_raw": "3",
+        "unit_price_raw": "16.60",
+        "amount_raw": "49.80"
+      },
+      {
+        "description": "Returns handling (per item)",
+        "quantity_raw": "1",
+        "unit_price_raw": "3.40",
+        "amount_raw": "3.40"
+      },
+      {
+        "description": "Weekend collection",
+        "quantity_raw": "2",
+        "unit_price_raw": "45.00",
+        "amount_raw": "90.00"
+      },
+      {
+        "description": "Pallet hire (per week)",
+        "quantity_raw": "3",
+        "unit_price_raw": "4.20",
+        "amount_raw": "12.60"
+      },
+      {
+        "description": "Shrink wrapping (per pallet)",
+        "quantity_raw": "1",
+        "unit_price_raw": "8.50",
+        "amount_raw": "8.50"
+      },
+      {
+        "description": "Two-person delivery",
+        "quantity_raw": "2",
+        "unit_price_raw": "64.00",
+        "amount_raw": "128.00"
+      },
+      {
+        "description": "Fuel surcharge",
+        "quantity_raw": "1",
+        "unit_price_raw": "22.40",
+        "amount_raw": "22.40"
+      },
+      {
+        "description": "Container unloading, 20 ft",
+        "quantity_raw": "2",
+        "unit_price_raw": "210.00",
+        "amount_raw": "420.00"
+      },
+      {
+        "description": "Insurance cover, goods in transit",
+        "quantity_raw": "3",
+        "unit_price_raw": "27.50",
+        "amount_raw": "82.50"
+      },
+      {
+        "description": "Next-day parcel, up to 10 kg",
+        "quantity_raw": "3",
+        "unit_price_raw": "11.90",
+        "amount_raw": "35.70"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "velmora logistics",
+    "vendor_tax_id": "ZZ771034592",
+    "invoice_number": "VL20261377",
+    "invoice_date": "2026-09-16",
+    "due_date": "2026-10-16",
+    "currency": "GBP",
+    "subtotal": "2494.70",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "498.94",
+    "total": "2993.64",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Customs documentation",
+        "quantity": "3",
+        "unit_price": "55.00",
+        "amount": "165.00"
+      },
+      {
+        "description": "Pallet freight, Hollins Cross to Ardley",
+        "quantity": "2",
+        "unit_price": "145.00",
+        "amount": "290.00"
+      },
+      {
+        "description": "Fuel surcharge",
+        "quantity": "3",
+        "unit_price": "22.40",
+        "amount": "67.20"
+      },
+      {
+        "description": "Weekend collection",
+        "quantity": "2",
+        "unit_price": "45.00",
+        "amount": "90.00"
+      },
+      {
+        "description": "Pick and pack (per order)",
+        "quantity": "3",
+        "unit_price": "2.85",
+        "amount": "8.55"
+      },
+      {
+        "description": "Customs documentation",
+        "quantity": "2",
+        "unit_price": "55.00",
+        "amount": "110.00"
+      },
+      {
+        "description": "Weekend collection",
+        "quantity": "1",
+        "unit_price": "45.00",
+        "amount": "45.00"
+      },
+      {
+        "description": "Weekend collection",
+        "quantity": "3",
+        "unit_price": "45.00",
+        "amount": "135.00"
+      },
+      {
+        "description": "Warehouse storage (pallet-week)",
+        "quantity": "3",
+        "unit_price": "6.75",
+        "amount": "20.25"
+      },
+      {
+        "description": "Weekend collection",
+        "quantity": "1",
+        "unit_price": "45.00",
+        "amount": "45.00"
+      },
+      {
+        "description": "Cross-docking (per pallet)",
+        "quantity": "2",
+        "unit_price": "12.75",
+        "amount": "25.50"
+      },
+      {
+        "description": "Cross-docking (per pallet)",
+        "quantity": "1",
+        "unit_price": "12.75",
+        "amount": "12.75"
+      },
+      {
+        "description": "Tail-lift delivery",
+        "quantity": "1",
+        "unit_price": "30.00",
+        "amount": "30.00"
+      },
+      {
+        "description": "Stock count (per hour)",
+        "quantity": "1",
+        "unit_price": "32.00",
+        "amount": "32.00"
+      },
+      {
+        "description": "Pallet hire (per week)",
+        "quantity": "1",
+        "unit_price": "4.20",
+        "amount": "4.20"
+      },
+      {
+        "description": "Next-day parcel, up to 10 kg",
+        "quantity": "3",
+        "unit_price": "11.90",
+        "amount": "35.70"
+      },
+      {
+        "description": "Timed delivery slot",
+        "quantity": "1",
+        "unit_price": "18.00",
+        "amount": "18.00"
+      },
+      {
+        "description": "Next-day parcel, up to 10 kg",
+        "quantity": "2",
+        "unit_price": "11.90",
+        "amount": "23.80"
+      },
+      {
+        "description": "Timed delivery slot",
+        "quantity": "2",
+        "unit_price": "18.00",
+        "amount": "36.00"
+      },
+      {
+        "description": "Two-person delivery",
+        "quantity": "2",
+        "unit_price": "64.00",
+        "amount": "128.00"
+      },
+      {
+        "description": "Tail-lift delivery",
+        "quantity": "3",
+        "unit_price": "30.00",
+        "amount": "90.00"
+      },
+      {
+        "description": "Cross-docking (per pallet)",
+        "quantity": "2",
+        "unit_price": "12.75",
+        "amount": "25.50"
+      },
+      {
+        "description": "Returns handling (per item)",
+        "quantity": "2",
+        "unit_price": "3.40",
+        "amount": "6.80"
+      },
+      {
+        "description": "Weekend collection",
+        "quantity": "3",
+        "unit_price": "45.00",
+        "amount": "135.00"
+      },
+      {
+        "description": "Packaging materials",
+        "quantity": "3",
+        "unit_price": "16.60",
+        "amount": "49.80"
+      },
+      {
+        "description": "Cross-docking (per pallet)",
+        "quantity": "1",
+        "unit_price": "12.75",
+        "amount": "12.75"
+      },
+      {
+        "description": "Packaging materials",
+        "quantity": "3",
+        "unit_price": "16.60",
+        "amount": "49.80"
+      },
+      {
+        "description": "Returns handling (per item)",
+        "quantity": "1",
+        "unit_price": "3.40",
+        "amount": "3.40"
+      },
+      {
+        "description": "Weekend collection",
+        "quantity": "2",
+        "unit_price": "45.00",
+        "amount": "90.00"
+      },
+      {
+        "description": "Pallet hire (per week)",
+        "quantity": "3",
+        "unit_price": "4.20",
+        "amount": "12.60"
+      },
+      {
+        "description": "Shrink wrapping (per pallet)",
+        "quantity": "1",
+        "unit_price": "8.50",
+        "amount": "8.50"
+      },
+      {
+        "description": "Two-person delivery",
+        "quantity": "2",
+        "unit_price": "64.00",
+        "amount": "128.00"
+      },
+      {
+        "description": "Fuel surcharge",
+        "quantity": "1",
+        "unit_price": "22.40",
+        "amount": "22.40"
+      },
+      {
+        "description": "Container unloading, 20 ft",
+        "quantity": "2",
+        "unit_price": "210.00",
+        "amount": "420.00"
+      },
+      {
+        "description": "Insurance cover, goods in transit",
+        "quantity": "3",
+        "unit_price": "27.50",
+        "amount": "82.50"
+      },
+      {
+        "description": "Next-day parcel, up to 10 kg",
+        "quantity": "3",
+        "unit_price": "11.90",
+        "amount": "35.70"
+      }
+    ]
+  },
+  "route": {
+    "status": "auto_approved",
+    "reason": null,
+    "flags": [],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "ledger",
+    "language": "en",
+    "vendor_address": [
+      "Unit 4, Fenwick Trade Park",
+      "Hollins Cross, ZZ 31108"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

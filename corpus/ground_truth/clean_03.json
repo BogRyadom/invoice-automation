@@ -1,0 +1,117 @@
+{
+  "doc_id": "clean_03",
+  "filename": "clean_03.pdf",
+  "group": "clean",
+  "description": "Printing, day-first dates with day above 12",
+  "email": {
+    "sender": "invoices@tessaly-print.example",
+    "subject": "Invoice TPW 2026 088",
+    "received_at": "2026-04-15T09:49:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Tessaly Print Works Ltd",
+    "vendor_tax_id_raw": null,
+    "invoice_number_raw": "TPW 2026 088",
+    "invoice_date_raw": "14/04/2026",
+    "due_date_raw": "14/05/2026",
+    "currency_raw": "GBP",
+    "subtotal_raw": "214.00",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "VAT 20%",
+        "amount_raw": "42.80"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "256.80",
+    "line_items": [
+      {
+        "description": "Business cards, 400 gsm (box of 500)",
+        "quantity_raw": "2",
+        "unit_price_raw": "34.00",
+        "amount_raw": "68.00"
+      },
+      {
+        "description": "A5 flyers, gloss (pack of 1000)",
+        "quantity_raw": "1",
+        "unit_price_raw": "96.00",
+        "amount_raw": "96.00"
+      },
+      {
+        "description": "Design proof revision",
+        "quantity_raw": "2",
+        "unit_price_raw": "25.00",
+        "amount_raw": "50.00"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "tessaly print works",
+    "vendor_tax_id": null,
+    "invoice_number": "TPW2026088",
+    "invoice_date": "2026-04-14",
+    "due_date": "2026-05-14",
+    "currency": "GBP",
+    "subtotal": "214.00",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "42.80",
+    "total": "256.80",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Business cards, 400 gsm (box of 500)",
+        "quantity": "2",
+        "unit_price": "34.00",
+        "amount": "68.00"
+      },
+      {
+        "description": "A5 flyers, gloss (pack of 1000)",
+        "quantity": "1",
+        "unit_price": "96.00",
+        "amount": "96.00"
+      },
+      {
+        "description": "Design proof revision",
+        "quantity": "2",
+        "unit_price": "25.00",
+        "amount": "50.00"
+      }
+    ]
+  },
+  "route": {
+    "status": "auto_approved",
+    "reason": null,
+    "flags": [],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "compact",
+    "language": "en",
+    "vendor_address": [
+      "22 Copperleaf Lane",
+      "Wexmoor, ZZ 11873"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

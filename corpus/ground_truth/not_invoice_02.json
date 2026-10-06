@@ -1,0 +1,119 @@
+{
+  "doc_id": "not_invoice_02",
+  "filename": "not_invoice_02.pdf",
+  "group": "not_invoice",
+  "description": "Vendor price list without totals",
+  "email": {
+    "sender": "sales@quorrin-office.example",
+    "subject": "Updated price list 2026",
+    "received_at": "2026-06-25T09:54:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "other",
+  "printed": null,
+  "expected": null,
+  "route": {
+    "status": "skipped",
+    "reason": "not_invoice",
+    "flags": [],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "price_list",
+    "layout": null,
+    "language": "en",
+    "vendor_address": [],
+    "bill_to": [],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": "PRICE LIST 2026",
+    "paragraphs": [
+      "Quorrin Office Supply Inc., 1180 Tallow Creek Road, Brandmoor",
+      "Valid from 1 July 2026. Prices in USD, excluding sales tax. Minimum order value 50.00 USD."
+    ],
+    "table_rows": [
+      [
+        "SKU",
+        "Description",
+        "Unit",
+        "Price"
+      ],
+      [
+        "QOS-1001",
+        "A4 copy paper, 80 gsm (box of 5 reams)",
+        "each",
+        "42.50"
+      ],
+      [
+        "QOS-1002",
+        "Gel pens, black (pack of 12)",
+        "each",
+        "9.80"
+      ],
+      [
+        "QOS-1003",
+        "Stapler, heavy duty",
+        "each",
+        "24.90"
+      ],
+      [
+        "QOS-1004",
+        "Archive boxes (pack of 10)",
+        "each",
+        "31.00"
+      ],
+      [
+        "QOS-1005",
+        "Whiteboard markers (set of 4)",
+        "each",
+        "7.45"
+      ],
+      [
+        "QOS-1006",
+        "Desk organiser, mesh",
+        "each",
+        "18.60"
+      ],
+      [
+        "QOS-1007",
+        "Toner cartridge TN-450",
+        "each",
+        "89.00"
+      ],
+      [
+        "QOS-1008",
+        "Sticky notes 76x76 (12 pads)",
+        "each",
+        "11.20"
+      ],
+      [
+        "QOS-1009",
+        "Ring binders A4 (pack of 10)",
+        "each",
+        "27.50"
+      ],
+      [
+        "QOS-1010",
+        "Envelopes C4 (box of 250)",
+        "each",
+        "38.90"
+      ],
+      [
+        "QOS-1011",
+        "Lever arch files (pack of 5)",
+        "each",
+        "16.75"
+      ],
+      [
+        "QOS-1012",
+        "Highlighters, assorted (pack of 6)",
+        "each",
+        "6.30"
+      ]
+    ],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

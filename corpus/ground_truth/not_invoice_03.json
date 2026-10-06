@@ -1,0 +1,63 @@
+{
+  "doc_id": "not_invoice_03",
+  "filename": "not_invoice_03.pdf",
+  "group": "not_invoice",
+  "description": "Cafe till receipt paid by card",
+  "email": {
+    "sender": "receipts@harbourside-cafe.example",
+    "subject": "Your receipt",
+    "received_at": "2026-09-08T09:55:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "other",
+  "printed": null,
+  "expected": null,
+  "route": {
+    "status": "skipped",
+    "reason": "not_invoice",
+    "flags": [],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "receipt",
+    "layout": null,
+    "language": "en",
+    "vendor_address": [],
+    "bill_to": [],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": "HARBOURSIDE CAFÉ",
+    "paragraphs": [
+      "12 Quay Street, Port Elnor | 2026-09-08 12:41",
+      "incl. VAT 20%: 3.90",
+      "PAID BY CARD **** 0000",
+      "RECEIPT No. 004127 - THANK YOU"
+    ],
+    "table_rows": [
+      [
+        "Flat white x2",
+        "7.80"
+      ],
+      [
+        "Club sandwich",
+        "9.50"
+      ],
+      [
+        "Lemon cake",
+        "4.20"
+      ],
+      [
+        "Sparkling water",
+        "1.90"
+      ],
+      [
+        "TOTAL",
+        "23.40"
+      ]
+    ],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

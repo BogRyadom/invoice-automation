@@ -1,0 +1,107 @@
+{
+  "doc_id": "european_03",
+  "filename": "european_03.pdf",
+  "group": "european",
+  "description": "German invoice, whole amounts only",
+  "email": {
+    "sender": "rechnung@halvren-maschinenbau.example",
+    "subject": "Rechnung RE-2026-0219",
+    "received_at": "2026-02-24T09:37:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Halvren Maschinenbau GmbH",
+    "vendor_tax_id_raw": "ZZ918273645",
+    "invoice_number_raw": "RE-2026-0219",
+    "invoice_date_raw": "23.02.2026",
+    "due_date_raw": "25.03.2026",
+    "currency_raw": "EUR",
+    "subtotal_raw": "1.600",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "MwSt. 19 %",
+        "amount_raw": "304"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "1.904",
+    "line_items": [
+      {
+        "description": "Prüfstand PS-3, Anzahlung",
+        "quantity_raw": "1",
+        "unit_price_raw": "1.000",
+        "amount_raw": "1.000"
+      },
+      {
+        "description": "Konstruktion (Pauschale)",
+        "quantity_raw": "1",
+        "unit_price_raw": "600",
+        "amount_raw": "600"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "halvren maschinenbau",
+    "vendor_tax_id": "ZZ918273645",
+    "invoice_number": "RE20260219",
+    "invoice_date": "2026-02-23",
+    "due_date": "2026-03-25",
+    "currency": "EUR",
+    "subtotal": "1600.00",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "304.00",
+    "total": "1904.00",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Prüfstand PS-3, Anzahlung",
+        "quantity": "1",
+        "unit_price": "1000",
+        "amount": "1000.00"
+      },
+      {
+        "description": "Konstruktion (Pauschale)",
+        "quantity": "1",
+        "unit_price": "600",
+        "amount": "600.00"
+      }
+    ]
+  },
+  "route": {
+    "status": "needs_review",
+    "reason": null,
+    "flags": [
+      "W2"
+    ],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "ledger",
+    "language": "de",
+    "vendor_address": [
+      "Eisenstraße 14",
+      "ZZ-73012 Brakfeld"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Kreditorenbuchhaltung",
+      "Salzwiese 7",
+      "ZZ-20417 Port Elnor"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

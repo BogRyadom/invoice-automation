@@ -1,0 +1,107 @@
+{
+  "doc_id": "arithmetic_01",
+  "filename": "arithmetic_01.pdf",
+  "group": "arithmetic_error",
+  "description": "Printed total has transposed digits",
+  "email": {
+    "sender": "billing@ostberg-facilities.example",
+    "subject": "Invoice OF2026-280",
+    "received_at": "2026-09-22T09:58:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Ostberg Facilities Co.",
+    "vendor_tax_id_raw": null,
+    "invoice_number_raw": "OF2026-280",
+    "invoice_date_raw": "September 21, 2026",
+    "due_date_raw": "October 21, 2026",
+    "currency_raw": "USD",
+    "subtotal_raw": "550.00",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "Sales Tax 6.5%",
+        "amount_raw": "35.75"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "558.75",
+    "line_items": [
+      {
+        "description": "HVAC maintenance visit",
+        "quantity_raw": "1",
+        "unit_price_raw": "310.00",
+        "amount_raw": "310.00"
+      },
+      {
+        "description": "Window cleaning, exterior",
+        "quantity_raw": "1",
+        "unit_price_raw": "240.00",
+        "amount_raw": "240.00"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "ostberg facilities",
+    "vendor_tax_id": null,
+    "invoice_number": "OF2026280",
+    "invoice_date": "2026-09-21",
+    "due_date": "2026-10-21",
+    "currency": "USD",
+    "subtotal": "550.00",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "35.75",
+    "total": "558.75",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "HVAC maintenance visit",
+        "quantity": "1",
+        "unit_price": "310.00",
+        "amount": "310.00"
+      },
+      {
+        "description": "Window cleaning, exterior",
+        "quantity": "1",
+        "unit_price": "240.00",
+        "amount": "240.00"
+      }
+    ]
+  },
+  "route": {
+    "status": "needs_review",
+    "reason": null,
+    "flags": [
+      "H2"
+    ],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "split",
+    "language": "en",
+    "vendor_address": [
+      "58 Marrow Street",
+      "Fenholt, ZZ 47720"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

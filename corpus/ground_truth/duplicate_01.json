@@ -1,0 +1,82 @@
+{
+  "doc_id": "duplicate_01",
+  "filename": "duplicate_01.pdf",
+  "group": "duplicate",
+  "description": "Byte-identical copy of clean_01, forwarded",
+  "email": {
+    "sender": "ap-forward@lumen-harbor.example",
+    "subject": "Fwd: Invoice QOS-26-0412",
+    "received_at": "2026-03-20T09:07:00Z"
+  },
+  "extraction_path": null,
+  "document_type": null,
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Quorrin Office Supply Inc.",
+    "vendor_tax_id_raw": "ZZ482910376",
+    "invoice_number_raw": "QOS-26-0412",
+    "invoice_date_raw": "2026-03-14",
+    "due_date_raw": "2026-04-13",
+    "currency_raw": "USD",
+    "subtotal_raw": "445.70",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "Sales Tax 8.25%",
+        "amount_raw": "36.77"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "482.47",
+    "line_items": [
+      {
+        "description": "A4 copy paper, 80 gsm (box of 5 reams)",
+        "quantity_raw": "4",
+        "unit_price_raw": "42.50",
+        "amount_raw": "170.00"
+      },
+      {
+        "description": "Gel pens, black (pack of 12)",
+        "quantity_raw": "6",
+        "unit_price_raw": "9.80",
+        "amount_raw": "58.80"
+      },
+      {
+        "description": "Toner cartridge TN-450",
+        "quantity_raw": "2",
+        "unit_price_raw": "89.00",
+        "amount_raw": "178.00"
+      },
+      {
+        "description": "Envelopes C4 (box of 250)",
+        "quantity_raw": "1",
+        "unit_price_raw": "38.90",
+        "amount_raw": "38.90"
+      }
+    ]
+  },
+  "expected": null,
+  "route": {
+    "status": "skipped",
+    "reason": "duplicate_file",
+    "flags": [],
+    "duplicate_of": "clean_01"
+  },
+  "render": {
+    "kind": "exact_copy",
+    "layout": null,
+    "language": "en",
+    "vendor_address": [],
+    "bill_to": [],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": "clean_01"
+  }
+}

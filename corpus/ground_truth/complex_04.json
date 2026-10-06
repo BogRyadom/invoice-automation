@@ -1,0 +1,102 @@
+{
+  "doc_id": "complex_04",
+  "filename": "complex_04.pdf",
+  "group": "complex",
+  "description": "No subtotal and no tax printed",
+  "email": {
+    "sender": "billing@ostberg-facilities.example",
+    "subject": "Invoice OF2026-262",
+    "received_at": "2026-09-15T09:55:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Ostberg Facilities Co.",
+    "vendor_tax_id_raw": null,
+    "invoice_number_raw": "OF2026-262",
+    "invoice_date_raw": "2026-09-14",
+    "due_date_raw": "2026-10-14",
+    "currency_raw": "USD",
+    "subtotal_raw": null,
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "350.00",
+    "line_items": [
+      {
+        "description": "Pest control inspection",
+        "quantity_raw": "1",
+        "unit_price_raw": "95.00",
+        "amount_raw": "95.00"
+      },
+      {
+        "description": "Carpet deep clean (per room)",
+        "quantity_raw": "3",
+        "unit_price_raw": "85.00",
+        "amount_raw": "255.00"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "ostberg facilities",
+    "vendor_tax_id": null,
+    "invoice_number": "OF2026262",
+    "invoice_date": "2026-09-14",
+    "due_date": "2026-10-14",
+    "currency": "USD",
+    "subtotal": null,
+    "discount": null,
+    "shipping": null,
+    "tax_total": null,
+    "total": "350.00",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Pest control inspection",
+        "quantity": "1",
+        "unit_price": "95.00",
+        "amount": "95.00"
+      },
+      {
+        "description": "Carpet deep clean (per room)",
+        "quantity": "3",
+        "unit_price": "85.00",
+        "amount": "255.00"
+      }
+    ]
+  },
+  "route": {
+    "status": "needs_review",
+    "reason": null,
+    "flags": [
+      "W7"
+    ],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "ledger",
+    "language": "en",
+    "vendor_address": [
+      "58 Marrow Street",
+      "Fenholt, ZZ 47720"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

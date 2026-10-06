@@ -1,0 +1,95 @@
+{
+  "doc_id": "clean_09",
+  "filename": "clean_09.pdf",
+  "group": "clean",
+  "description": "Consulting from a vendor not in the registry",
+  "email": {
+    "sender": "finance@pellucid-analytics.example",
+    "subject": "Invoice PA-1007",
+    "received_at": "2026-07-16T09:55:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Pellucid Analytics Ltd",
+    "vendor_tax_id_raw": "ZZ640022815",
+    "invoice_number_raw": "PA-1007",
+    "invoice_date_raw": "15 Jul 2026",
+    "due_date_raw": "29 Jul 2026",
+    "currency_raw": "EUR",
+    "subtotal_raw": "1,950.00",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "VAT 23%",
+        "amount_raw": "448.50"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "2,398.50",
+    "line_items": [
+      {
+        "description": "Dashboard development (days)",
+        "quantity_raw": "3",
+        "unit_price_raw": "650.00",
+        "amount_raw": "1,950.00"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "pellucid analytics",
+    "vendor_tax_id": "ZZ640022815",
+    "invoice_number": "PA1007",
+    "invoice_date": "2026-07-15",
+    "due_date": "2026-07-29",
+    "currency": "EUR",
+    "subtotal": "1950.00",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "448.50",
+    "total": "2398.50",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Dashboard development (days)",
+        "quantity": "3",
+        "unit_price": "650.00",
+        "amount": "1950.00"
+      }
+    ]
+  },
+  "route": {
+    "status": "needs_review",
+    "reason": null,
+    "flags": [
+      "W4"
+    ],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "classic",
+    "language": "en",
+    "vendor_address": [
+      "3 Harrow Quay",
+      "Dunmere, ZZ 08861"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

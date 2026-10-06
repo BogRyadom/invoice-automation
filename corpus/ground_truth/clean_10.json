@@ -1,0 +1,107 @@
+{
+  "doc_id": "clean_10",
+  "filename": "clean_10.pdf",
+  "group": "clean",
+  "description": "Studio work from a vendor not in the registry",
+  "email": {
+    "sender": "studio@corvane.example",
+    "subject": "Invoice CS 26-014",
+    "received_at": "2026-07-21T09:47:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Corvane Studio LLC",
+    "vendor_tax_id_raw": null,
+    "invoice_number_raw": "CS 26-014",
+    "invoice_date_raw": "July 20, 2026",
+    "due_date_raw": "August 19, 2026",
+    "currency_raw": "USD",
+    "subtotal_raw": "920.00",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "Sales Tax 8.25%",
+        "amount_raw": "75.90"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "995.90",
+    "line_items": [
+      {
+        "description": "Product photography (half day)",
+        "quantity_raw": "1",
+        "unit_price_raw": "650.00",
+        "amount_raw": "650.00"
+      },
+      {
+        "description": "Image retouching (per image)",
+        "quantity_raw": "15",
+        "unit_price_raw": "18.00",
+        "amount_raw": "270.00"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "corvane studio",
+    "vendor_tax_id": null,
+    "invoice_number": "CS26014",
+    "invoice_date": "2026-07-20",
+    "due_date": "2026-08-19",
+    "currency": "USD",
+    "subtotal": "920.00",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "75.90",
+    "total": "995.90",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Product photography (half day)",
+        "quantity": "1",
+        "unit_price": "650.00",
+        "amount": "650.00"
+      },
+      {
+        "description": "Image retouching (per image)",
+        "quantity": "15",
+        "unit_price": "18.00",
+        "amount": "270.00"
+      }
+    ]
+  },
+  "route": {
+    "status": "needs_review",
+    "reason": null,
+    "flags": [
+      "W4"
+    ],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "band",
+    "language": "en",
+    "vendor_address": [
+      "911 Kettle Point Drive",
+      "Saltby, ZZ 52260"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

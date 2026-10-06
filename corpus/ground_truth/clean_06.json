@@ -1,0 +1,129 @@
+{
+  "doc_id": "clean_06",
+  "filename": "clean_06.pdf",
+  "group": "clean",
+  "description": "Office supplies, second invoice",
+  "email": {
+    "sender": "billing@quorrin-office.example",
+    "subject": "Invoice QOS-26-0457",
+    "received_at": "2026-06-03T09:52:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Quorrin Office Supply Inc.",
+    "vendor_tax_id_raw": "ZZ482910376",
+    "invoice_number_raw": "QOS-26-0457",
+    "invoice_date_raw": "June 2, 2026",
+    "due_date_raw": "July 2, 2026",
+    "currency_raw": "USD",
+    "subtotal_raw": "265.80",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "Sales Tax 8.25%",
+        "amount_raw": "21.93"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "287.73",
+    "line_items": [
+      {
+        "description": "Stapler, heavy duty",
+        "quantity_raw": "2",
+        "unit_price_raw": "24.90",
+        "amount_raw": "49.80"
+      },
+      {
+        "description": "Archive boxes (pack of 10)",
+        "quantity_raw": "3",
+        "unit_price_raw": "31.00",
+        "amount_raw": "93.00"
+      },
+      {
+        "description": "Sticky notes 76x76 (12 pads)",
+        "quantity_raw": "5",
+        "unit_price_raw": "11.20",
+        "amount_raw": "56.00"
+      },
+      {
+        "description": "Lever arch files (pack of 5)",
+        "quantity_raw": "4",
+        "unit_price_raw": "16.75",
+        "amount_raw": "67.00"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "quorrin office supply",
+    "vendor_tax_id": "ZZ482910376",
+    "invoice_number": "QOS260457",
+    "invoice_date": "2026-06-02",
+    "due_date": "2026-07-02",
+    "currency": "USD",
+    "subtotal": "265.80",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "21.93",
+    "total": "287.73",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Stapler, heavy duty",
+        "quantity": "2",
+        "unit_price": "24.90",
+        "amount": "49.80"
+      },
+      {
+        "description": "Archive boxes (pack of 10)",
+        "quantity": "3",
+        "unit_price": "31.00",
+        "amount": "93.00"
+      },
+      {
+        "description": "Sticky notes 76x76 (12 pads)",
+        "quantity": "5",
+        "unit_price": "11.20",
+        "amount": "56.00"
+      },
+      {
+        "description": "Lever arch files (pack of 5)",
+        "quantity": "4",
+        "unit_price": "16.75",
+        "amount": "67.00"
+      }
+    ]
+  },
+  "route": {
+    "status": "auto_approved",
+    "reason": null,
+    "flags": [],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "band",
+    "language": "en",
+    "vendor_address": [
+      "1180 Tallow Creek Road",
+      "Brandmoor, ZZ 60231"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

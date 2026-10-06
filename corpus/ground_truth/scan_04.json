@@ -1,0 +1,112 @@
+{
+  "doc_id": "scan_04",
+  "filename": "scan_04.pdf",
+  "group": "scan",
+  "description": "Scanned German invoice",
+  "email": {
+    "sender": "rechnung@halvren-maschinenbau.example",
+    "subject": "Rechnung RE-2026-0731",
+    "received_at": "2026-07-30T09:16:00Z"
+  },
+  "extraction_path": "vision",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Halvren Maschinenbau GmbH",
+    "vendor_tax_id_raw": "ZZ918273645",
+    "invoice_number_raw": "RE-2026-0731",
+    "invoice_date_raw": "29.07.2026",
+    "due_date_raw": "28.08.2026",
+    "currency_raw": "EUR",
+    "subtotal_raw": "421,00",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "MwSt. 19 %",
+        "amount_raw": "79,99"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "500,99",
+    "line_items": [
+      {
+        "description": "Antriebswelle Typ AW-40",
+        "quantity_raw": "1",
+        "unit_price_raw": "186,00",
+        "amount_raw": "186,00"
+      },
+      {
+        "description": "Dichtungssatz DS-12",
+        "quantity_raw": "10",
+        "unit_price_raw": "23,50",
+        "amount_raw": "235,00"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "halvren maschinenbau",
+    "vendor_tax_id": "ZZ918273645",
+    "invoice_number": "RE20260731",
+    "invoice_date": "2026-07-29",
+    "due_date": "2026-08-28",
+    "currency": "EUR",
+    "subtotal": "421.00",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "79.99",
+    "total": "500.99",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Antriebswelle Typ AW-40",
+        "quantity": "1",
+        "unit_price": "186.00",
+        "amount": "186.00"
+      },
+      {
+        "description": "Dichtungssatz DS-12",
+        "quantity": "10",
+        "unit_price": "23.50",
+        "amount": "235.00"
+      }
+    ]
+  },
+  "route": {
+    "status": "needs_review",
+    "reason": null,
+    "flags": [
+      "W5"
+    ],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "classic",
+    "language": "de",
+    "vendor_address": [
+      "Eisenstraße 14",
+      "ZZ-73012 Brakfeld"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Kreditorenbuchhaltung",
+      "Salzwiese 7",
+      "ZZ-20417 Port Elnor"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": {
+      "seed": 104,
+      "rotation_degrees": -2.4,
+      "noise": 0.09,
+      "dpi": 150
+    },
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

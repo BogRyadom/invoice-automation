@@ -1,0 +1,117 @@
+{
+  "doc_id": "clean_07",
+  "filename": "clean_07.pdf",
+  "group": "clean",
+  "description": "Courier and fulfilment",
+  "email": {
+    "sender": "accounts@velmora-logistics.example",
+    "subject": "Invoice VL/2026/1188",
+    "received_at": "2026-06-19T09:53:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Velmora Logistics LLC",
+    "vendor_tax_id_raw": "ZZ771034592",
+    "invoice_number_raw": "VL/2026/1188",
+    "invoice_date_raw": "2026-06-18",
+    "due_date_raw": "2026-07-18",
+    "currency_raw": "GBP",
+    "subtotal_raw": "410.80",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "VAT 20%",
+        "amount_raw": "82.16"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "492.96",
+    "line_items": [
+      {
+        "description": "Same-day courier, zone 2",
+        "quantity_raw": "4",
+        "unit_price_raw": "38.50",
+        "amount_raw": "154.00"
+      },
+      {
+        "description": "Pick and pack (per order)",
+        "quantity_raw": "40",
+        "unit_price_raw": "2.85",
+        "amount_raw": "114.00"
+      },
+      {
+        "description": "Next-day parcel, up to 10 kg",
+        "quantity_raw": "12",
+        "unit_price_raw": "11.90",
+        "amount_raw": "142.80"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "velmora logistics",
+    "vendor_tax_id": "ZZ771034592",
+    "invoice_number": "VL20261188",
+    "invoice_date": "2026-06-18",
+    "due_date": "2026-07-18",
+    "currency": "GBP",
+    "subtotal": "410.80",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "82.16",
+    "total": "492.96",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Same-day courier, zone 2",
+        "quantity": "4",
+        "unit_price": "38.50",
+        "amount": "154.00"
+      },
+      {
+        "description": "Pick and pack (per order)",
+        "quantity": "40",
+        "unit_price": "2.85",
+        "amount": "114.00"
+      },
+      {
+        "description": "Next-day parcel, up to 10 kg",
+        "quantity": "12",
+        "unit_price": "11.90",
+        "amount": "142.80"
+      }
+    ]
+  },
+  "route": {
+    "status": "auto_approved",
+    "reason": null,
+    "flags": [],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "classic",
+    "language": "en",
+    "vendor_address": [
+      "Unit 4, Fenwick Trade Park",
+      "Hollins Cross, ZZ 31108"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

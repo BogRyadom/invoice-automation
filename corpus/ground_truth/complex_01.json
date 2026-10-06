@@ -1,0 +1,117 @@
+{
+  "doc_id": "complex_01",
+  "filename": "complex_01.pdf",
+  "group": "complex",
+  "description": "Discount and shipping",
+  "email": {
+    "sender": "billing@quorrin-office.example",
+    "subject": "Invoice QOS-26-0519",
+    "received_at": "2026-08-15T09:52:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Quorrin Office Supply Inc.",
+    "vendor_tax_id_raw": "ZZ482910376",
+    "invoice_number_raw": "QOS-26-0519",
+    "invoice_date_raw": "2026-08-14",
+    "due_date_raw": "2026-09-13",
+    "currency_raw": "USD",
+    "subtotal_raw": "825.70",
+    "discount_raw": "82.57",
+    "shipping_raw": "35.00",
+    "tax_lines": [
+      {
+        "label": "Sales Tax 8.25%",
+        "amount_raw": "64.20"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "842.33",
+    "line_items": [
+      {
+        "description": "A4 copy paper, 80 gsm (box of 5 reams)",
+        "quantity_raw": "10",
+        "unit_price_raw": "42.50",
+        "amount_raw": "425.00"
+      },
+      {
+        "description": "Toner cartridge TN-450",
+        "quantity_raw": "4",
+        "unit_price_raw": "89.00",
+        "amount_raw": "356.00"
+      },
+      {
+        "description": "Whiteboard markers (set of 4)",
+        "quantity_raw": "6",
+        "unit_price_raw": "7.45",
+        "amount_raw": "44.70"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "quorrin office supply",
+    "vendor_tax_id": "ZZ482910376",
+    "invoice_number": "QOS260519",
+    "invoice_date": "2026-08-14",
+    "due_date": "2026-09-13",
+    "currency": "USD",
+    "subtotal": "825.70",
+    "discount": "82.57",
+    "shipping": "35.00",
+    "tax_total": "64.20",
+    "total": "842.33",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "A4 copy paper, 80 gsm (box of 5 reams)",
+        "quantity": "10",
+        "unit_price": "42.50",
+        "amount": "425.00"
+      },
+      {
+        "description": "Toner cartridge TN-450",
+        "quantity": "4",
+        "unit_price": "89.00",
+        "amount": "356.00"
+      },
+      {
+        "description": "Whiteboard markers (set of 4)",
+        "quantity": "6",
+        "unit_price": "7.45",
+        "amount": "44.70"
+      }
+    ]
+  },
+  "route": {
+    "status": "auto_approved",
+    "reason": null,
+    "flags": [],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "classic",
+    "language": "en",
+    "vendor_address": [
+      "1180 Tallow Creek Road",
+      "Brandmoor, ZZ 60231"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

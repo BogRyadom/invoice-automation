@@ -1,0 +1,124 @@
+{
+  "doc_id": "scan_01",
+  "filename": "scan_01.pdf",
+  "group": "scan",
+  "description": "Scanned invoice, slight clockwise skew",
+  "email": {
+    "sender": "billing@quorrin-office.example",
+    "subject": "Invoice QOS-26-0533",
+    "received_at": "2026-08-25T09:13:00Z"
+  },
+  "extraction_path": "vision",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Quorrin Office Supply Inc.",
+    "vendor_tax_id_raw": "ZZ482910376",
+    "invoice_number_raw": "QOS-26-0533",
+    "invoice_date_raw": "August 24, 2026",
+    "due_date_raw": "September 23, 2026",
+    "currency_raw": "USD",
+    "subtotal_raw": "173.80",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "Sales Tax 8.25%",
+        "amount_raw": "14.34"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "188.14",
+    "line_items": [
+      {
+        "description": "Desk organiser, mesh",
+        "quantity_raw": "3",
+        "unit_price_raw": "18.60",
+        "amount_raw": "55.80"
+      },
+      {
+        "description": "Ring binders A4 (pack of 10)",
+        "quantity_raw": "2",
+        "unit_price_raw": "27.50",
+        "amount_raw": "55.00"
+      },
+      {
+        "description": "Highlighters, assorted (pack of 6)",
+        "quantity_raw": "10",
+        "unit_price_raw": "6.30",
+        "amount_raw": "63.00"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "quorrin office supply",
+    "vendor_tax_id": "ZZ482910376",
+    "invoice_number": "QOS260533",
+    "invoice_date": "2026-08-24",
+    "due_date": "2026-09-23",
+    "currency": "USD",
+    "subtotal": "173.80",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "14.34",
+    "total": "188.14",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Desk organiser, mesh",
+        "quantity": "3",
+        "unit_price": "18.60",
+        "amount": "55.80"
+      },
+      {
+        "description": "Ring binders A4 (pack of 10)",
+        "quantity": "2",
+        "unit_price": "27.50",
+        "amount": "55.00"
+      },
+      {
+        "description": "Highlighters, assorted (pack of 6)",
+        "quantity": "10",
+        "unit_price": "6.30",
+        "amount": "63.00"
+      }
+    ]
+  },
+  "route": {
+    "status": "needs_review",
+    "reason": null,
+    "flags": [
+      "W5"
+    ],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "classic",
+    "language": "en",
+    "vendor_address": [
+      "1180 Tallow Creek Road",
+      "Brandmoor, ZZ 60231"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": {
+      "seed": 101,
+      "rotation_degrees": 1.2,
+      "noise": 0.08,
+      "dpi": 150
+    },
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

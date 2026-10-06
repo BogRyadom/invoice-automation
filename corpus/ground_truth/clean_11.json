@@ -1,0 +1,95 @@
+{
+  "doc_id": "clean_11",
+  "filename": "clean_11.pdf",
+  "group": "clean",
+  "description": "Annual licences above the auto-approve limit",
+  "email": {
+    "sender": "ar@brevik-software.example",
+    "subject": "Invoice BSC-INV-00802",
+    "received_at": "2026-07-15T09:48:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Brevik Software Corp.",
+    "vendor_tax_id_raw": "ZZ305518847",
+    "invoice_number_raw": "BSC-INV-00802",
+    "invoice_date_raw": "14 Jul 2026",
+    "due_date_raw": "13 Aug 2026",
+    "currency_raw": "USD",
+    "subtotal_raw": "11,520.00",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "Sales Tax 8.25%",
+        "amount_raw": "950.40"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "12,470.40",
+    "line_items": [
+      {
+        "description": "Analytics Suite licence, annual (per seat)",
+        "quantity_raw": "24",
+        "unit_price_raw": "480.00",
+        "amount_raw": "11,520.00"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "brevik software",
+    "vendor_tax_id": "ZZ305518847",
+    "invoice_number": "BSCINV00802",
+    "invoice_date": "2026-07-14",
+    "due_date": "2026-08-13",
+    "currency": "USD",
+    "subtotal": "11520.00",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "950.40",
+    "total": "12470.40",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Analytics Suite licence, annual (per seat)",
+        "quantity": "24",
+        "unit_price": "480.00",
+        "amount": "11520.00"
+      }
+    ]
+  },
+  "route": {
+    "status": "needs_review",
+    "reason": null,
+    "flags": [
+      "W6"
+    ],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "split",
+    "language": "en",
+    "vendor_address": [
+      "400 Lantern Hill Avenue, Suite 12",
+      "Cordale, ZZ 90514"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

@@ -59,4 +59,5 @@ Run from the repo root. Requires Docker Desktop (running), GNU make, uv, Node.js
 - Format: `make fmt`
 - Test: `make test`. DB tests need `TEST_DATABASE_URL` and the local Supabase Postgres; locally they skip without it, in CI they fail
 - New migration: `npx supabase migration new <name>`
-- Eval: `make eval`, added in Stage 1
+- Corpus: `make corpus` regenerates `corpus/ground_truth`, `corpus/documents`, the manifest and the vendor seed
+- Eval: `make eval` (real LLM, results in `eval/results/`, available from Stage 2). `make eval-oracle` checks the harness against ground truth and saves nothing

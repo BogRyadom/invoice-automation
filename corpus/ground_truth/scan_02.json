@@ -1,0 +1,112 @@
+{
+  "doc_id": "scan_02",
+  "filename": "scan_02.pdf",
+  "group": "scan",
+  "description": "Scanned invoice, counter-clockwise skew",
+  "email": {
+    "sender": "invoices@tessaly-print.example",
+    "subject": "Invoice TPW 2026 140",
+    "received_at": "2026-09-18T09:14:00Z"
+  },
+  "extraction_path": "vision",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Tessaly Print Works Ltd",
+    "vendor_tax_id_raw": null,
+    "invoice_number_raw": "TPW 2026 140",
+    "invoice_date_raw": "17/09/2026",
+    "due_date_raw": "17/10/2026",
+    "currency_raw": "GBP",
+    "subtotal_raw": "194.00",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "VAT 20%",
+        "amount_raw": "38.80"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "232.80",
+    "line_items": [
+      {
+        "description": "Letterheads, 120 gsm (500)",
+        "quantity_raw": "1",
+        "unit_price_raw": "58.00",
+        "amount_raw": "58.00"
+      },
+      {
+        "description": "Business cards, 400 gsm (box of 500)",
+        "quantity_raw": "4",
+        "unit_price_raw": "34.00",
+        "amount_raw": "136.00"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "tessaly print works",
+    "vendor_tax_id": null,
+    "invoice_number": "TPW2026140",
+    "invoice_date": "2026-09-17",
+    "due_date": "2026-10-17",
+    "currency": "GBP",
+    "subtotal": "194.00",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "38.80",
+    "total": "232.80",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Letterheads, 120 gsm (500)",
+        "quantity": "1",
+        "unit_price": "58.00",
+        "amount": "58.00"
+      },
+      {
+        "description": "Business cards, 400 gsm (box of 500)",
+        "quantity": "4",
+        "unit_price": "34.00",
+        "amount": "136.00"
+      }
+    ]
+  },
+  "route": {
+    "status": "needs_review",
+    "reason": null,
+    "flags": [
+      "W5"
+    ],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "band",
+    "language": "en",
+    "vendor_address": [
+      "22 Copperleaf Lane",
+      "Wexmoor, ZZ 11873"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": {
+      "seed": 102,
+      "rotation_degrees": -1.8,
+      "noise": 0.1,
+      "dpi": 150
+    },
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

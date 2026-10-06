@@ -1,4 +1,4 @@
-"""Worker process entry point. Queue processing (FOR UPDATE SKIP LOCKED) arrives in Stage 3."""
+# Worker process entry point. Queue processing (FOR UPDATE SKIP LOCKED) arrives in Stage 3.
 
 import logging
 import signal

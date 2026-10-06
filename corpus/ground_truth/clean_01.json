@@ -1,0 +1,129 @@
+{
+  "doc_id": "clean_01",
+  "filename": "clean_01.pdf",
+  "group": "clean",
+  "description": "Office supplies, ISO dates",
+  "email": {
+    "sender": "billing@quorrin-office.example",
+    "subject": "Invoice QOS-26-0412",
+    "received_at": "2026-03-15T09:47:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Quorrin Office Supply Inc.",
+    "vendor_tax_id_raw": "ZZ482910376",
+    "invoice_number_raw": "QOS-26-0412",
+    "invoice_date_raw": "2026-03-14",
+    "due_date_raw": "2026-04-13",
+    "currency_raw": "USD",
+    "subtotal_raw": "445.70",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "Sales Tax 8.25%",
+        "amount_raw": "36.77"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "482.47",
+    "line_items": [
+      {
+        "description": "A4 copy paper, 80 gsm (box of 5 reams)",
+        "quantity_raw": "4",
+        "unit_price_raw": "42.50",
+        "amount_raw": "170.00"
+      },
+      {
+        "description": "Gel pens, black (pack of 12)",
+        "quantity_raw": "6",
+        "unit_price_raw": "9.80",
+        "amount_raw": "58.80"
+      },
+      {
+        "description": "Toner cartridge TN-450",
+        "quantity_raw": "2",
+        "unit_price_raw": "89.00",
+        "amount_raw": "178.00"
+      },
+      {
+        "description": "Envelopes C4 (box of 250)",
+        "quantity_raw": "1",
+        "unit_price_raw": "38.90",
+        "amount_raw": "38.90"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "quorrin office supply",
+    "vendor_tax_id": "ZZ482910376",
+    "invoice_number": "QOS260412",
+    "invoice_date": "2026-03-14",
+    "due_date": "2026-04-13",
+    "currency": "USD",
+    "subtotal": "445.70",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "36.77",
+    "total": "482.47",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "A4 copy paper, 80 gsm (box of 5 reams)",
+        "quantity": "4",
+        "unit_price": "42.50",
+        "amount": "170.00"
+      },
+      {
+        "description": "Gel pens, black (pack of 12)",
+        "quantity": "6",
+        "unit_price": "9.80",
+        "amount": "58.80"
+      },
+      {
+        "description": "Toner cartridge TN-450",
+        "quantity": "2",
+        "unit_price": "89.00",
+        "amount": "178.00"
+      },
+      {
+        "description": "Envelopes C4 (box of 250)",
+        "quantity": "1",
+        "unit_price": "38.90",
+        "amount": "38.90"
+      }
+    ]
+  },
+  "route": {
+    "status": "auto_approved",
+    "reason": null,
+    "flags": [],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "classic",
+    "language": "en",
+    "vendor_address": [
+      "1180 Tallow Creek Road",
+      "Brandmoor, ZZ 60231"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

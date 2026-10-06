@@ -1,0 +1,117 @@
+{
+  "doc_id": "clean_05",
+  "filename": "clean_05.pdf",
+  "group": "clean",
+  "description": "Facilities services",
+  "email": {
+    "sender": "billing@ostberg-facilities.example",
+    "subject": "Invoice OF2026-221",
+    "received_at": "2026-05-19T09:51:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Ostberg Facilities Co.",
+    "vendor_tax_id_raw": null,
+    "invoice_number_raw": "OF2026-221",
+    "invoice_date_raw": "2026-05-18",
+    "due_date_raw": "2026-06-17",
+    "currency_raw": "USD",
+    "subtotal_raw": "1,490.00",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "Sales Tax 6.5%",
+        "amount_raw": "96.85"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "1,586.85",
+    "line_items": [
+      {
+        "description": "Office cleaning, monthly contract",
+        "quantity_raw": "1",
+        "unit_price_raw": "1,150.00",
+        "amount_raw": "1,150.00"
+      },
+      {
+        "description": "Window cleaning, exterior",
+        "quantity_raw": "1",
+        "unit_price_raw": "240.00",
+        "amount_raw": "240.00"
+      },
+      {
+        "description": "Waste removal (bin lift)",
+        "quantity_raw": "8",
+        "unit_price_raw": "12.50",
+        "amount_raw": "100.00"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "ostberg facilities",
+    "vendor_tax_id": null,
+    "invoice_number": "OF2026221",
+    "invoice_date": "2026-05-18",
+    "due_date": "2026-06-17",
+    "currency": "USD",
+    "subtotal": "1490.00",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "96.85",
+    "total": "1586.85",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Office cleaning, monthly contract",
+        "quantity": "1",
+        "unit_price": "1150.00",
+        "amount": "1150.00"
+      },
+      {
+        "description": "Window cleaning, exterior",
+        "quantity": "1",
+        "unit_price": "240.00",
+        "amount": "240.00"
+      },
+      {
+        "description": "Waste removal (bin lift)",
+        "quantity": "8",
+        "unit_price": "12.50",
+        "amount": "100.00"
+      }
+    ]
+  },
+  "route": {
+    "status": "auto_approved",
+    "reason": null,
+    "flags": [],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "ledger",
+    "language": "en",
+    "vendor_address": [
+      "58 Marrow Street",
+      "Fenholt, ZZ 47720"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

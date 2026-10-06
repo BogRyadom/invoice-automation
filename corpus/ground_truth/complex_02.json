@@ -1,0 +1,121 @@
+{
+  "doc_id": "complex_02",
+  "filename": "complex_02.pdf",
+  "group": "complex",
+  "description": "Two VAT rates",
+  "email": {
+    "sender": "accounts@velmora-logistics.example",
+    "subject": "Invoice VL/2026/1302",
+    "received_at": "2026-08-20T09:53:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Velmora Logistics LLC",
+    "vendor_tax_id_raw": "ZZ771034592",
+    "invoice_number_raw": "VL/2026/1302",
+    "invoice_date_raw": "August 19, 2026",
+    "due_date_raw": "September 18, 2026",
+    "currency_raw": "GBP",
+    "subtotal_raw": "425.00",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "VAT 20%",
+        "amount_raw": "69.00"
+      },
+      {
+        "label": "VAT 5%",
+        "amount_raw": "4.00"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "498.00",
+    "line_items": [
+      {
+        "description": "Pallet freight, Hollins Cross to Ardley",
+        "quantity_raw": "2",
+        "unit_price_raw": "145.00",
+        "amount_raw": "290.00"
+      },
+      {
+        "description": "Customs documentation",
+        "quantity_raw": "1",
+        "unit_price_raw": "55.00",
+        "amount_raw": "55.00"
+      },
+      {
+        "description": "Mobility equipment delivery (reduced rate)",
+        "quantity_raw": "2",
+        "unit_price_raw": "40.00",
+        "amount_raw": "80.00"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "velmora logistics",
+    "vendor_tax_id": "ZZ771034592",
+    "invoice_number": "VL20261302",
+    "invoice_date": "2026-08-19",
+    "due_date": "2026-09-18",
+    "currency": "GBP",
+    "subtotal": "425.00",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "73.00",
+    "total": "498.00",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Pallet freight, Hollins Cross to Ardley",
+        "quantity": "2",
+        "unit_price": "145.00",
+        "amount": "290.00"
+      },
+      {
+        "description": "Customs documentation",
+        "quantity": "1",
+        "unit_price": "55.00",
+        "amount": "55.00"
+      },
+      {
+        "description": "Mobility equipment delivery (reduced rate)",
+        "quantity": "2",
+        "unit_price": "40.00",
+        "amount": "80.00"
+      }
+    ]
+  },
+  "route": {
+    "status": "auto_approved",
+    "reason": null,
+    "flags": [],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "split",
+    "language": "en",
+    "vendor_address": [
+      "Unit 4, Fenwick Trade Park",
+      "Hollins Cross, ZZ 31108"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

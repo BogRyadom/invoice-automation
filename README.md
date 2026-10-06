@@ -2,7 +2,7 @@
 
 Invoice processing from Gmail with verifiable extraction, deterministic validation and human review.
 
-Portfolio project, work in progress. Current state: Stage 0 (repository skeleton, config, migrations, CI, local run). The specification and stage plan live in [docs/SPEC.md](docs/SPEC.md) (in Russian).
+Portfolio project, work in progress. Current state: Stage 1 (synthetic corpus with ground truth, eval harness). The specification and stage plan live in [docs/SPEC.md](docs/SPEC.md) (in Russian).
 
 ## Stack
 
@@ -42,6 +42,9 @@ Stop everything with `make down`.
 | `make test` | pytest. DB tests use `TEST_DATABASE_URL` and the local Supabase Postgres |
 | `make fmt` | ruff autofix and format |
 | `make db-reset` | recreate the local database and reapply all migrations |
+| `make corpus` | regenerate the synthetic corpus (ground truth JSON and PDFs) |
+| `make eval-oracle` | check the eval harness against ground truth; nothing is saved |
+| `make eval` | run the eval with the real LLM provider (from Stage 2) |
 | `npx supabase migration new <name>` | create a new SQL migration in `supabase/migrations` |
 
 ## Repository layout

@@ -1,12 +1,13 @@
 # Recipes avoid shell-specific syntax so they run under sh and Windows cmd alike.
 
 API = uv --directory api
+PY = uv run --project api
 WEB = npm --prefix web
 
-.PHONY: help install db-start db-stop db-reset up down logs lint fmt test
+.PHONY: help install db-start db-stop db-reset up down logs lint fmt test corpus eval eval-oracle
 
 help:
-	@echo Targets: install db-start db-stop db-reset up down logs lint fmt test
+	@echo Targets: install db-start db-stop db-reset up down logs lint fmt test corpus eval eval-oracle
 
 install:
 	npm ci
@@ -34,14 +35,26 @@ logs:
 	docker compose logs -f
 
 lint:
-	$(API) run ruff check .
-	$(API) run ruff format --check .
+	$(PY) ruff check .
+	$(PY) ruff format --check .
 	$(WEB) run lint
 	$(WEB) run typecheck
 
 fmt:
-	$(API) run ruff check --fix .
-	$(API) run ruff format .
+	$(PY) ruff check --fix .
+	$(PY) ruff format .
 
 test:
 	$(API) run pytest
+
+# Regenerates corpus/ground_truth, corpus/documents, the manifest and the vendor seed.
+corpus:
+	$(PY) python -m corpus.build
+
+# Real LLM run; results go to eval/results. Available from Stage 2.
+eval:
+	$(PY) python -m eval.run_eval
+
+# Checks the eval harness against ground truth; nothing is saved.
+eval-oracle:
+	$(PY) python -m eval.run_eval --predictor oracle

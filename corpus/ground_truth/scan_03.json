@@ -1,0 +1,112 @@
+{
+  "doc_id": "scan_03",
+  "filename": "scan_03.pdf",
+  "group": "scan",
+  "description": "Scanned invoice, light noise",
+  "email": {
+    "sender": "ar@brevik-software.example",
+    "subject": "Invoice BSC-INV-00845",
+    "received_at": "2026-08-26T09:15:00Z"
+  },
+  "extraction_path": "vision",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Brevik Software Corp.",
+    "vendor_tax_id_raw": "ZZ305518847",
+    "invoice_number_raw": "BSC-INV-00845",
+    "invoice_date_raw": "25 Aug 2026",
+    "due_date_raw": "24 Sep 2026",
+    "currency_raw": "USD",
+    "subtotal_raw": "710.00",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "Sales Tax 8.25%",
+        "amount_raw": "58.58"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "768.58",
+    "line_items": [
+      {
+        "description": "Sandbox environment, monthly",
+        "quantity_raw": "3",
+        "unit_price_raw": "120.00",
+        "amount_raw": "360.00"
+      },
+      {
+        "description": "Premium support, monthly",
+        "quantity_raw": "1",
+        "unit_price_raw": "350.00",
+        "amount_raw": "350.00"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "brevik software",
+    "vendor_tax_id": "ZZ305518847",
+    "invoice_number": "BSCINV00845",
+    "invoice_date": "2026-08-25",
+    "due_date": "2026-09-24",
+    "currency": "USD",
+    "subtotal": "710.00",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "58.58",
+    "total": "768.58",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Sandbox environment, monthly",
+        "quantity": "3",
+        "unit_price": "120.00",
+        "amount": "360.00"
+      },
+      {
+        "description": "Premium support, monthly",
+        "quantity": "1",
+        "unit_price": "350.00",
+        "amount": "350.00"
+      }
+    ]
+  },
+  "route": {
+    "status": "needs_review",
+    "reason": null,
+    "flags": [
+      "W5"
+    ],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "split",
+    "language": "en",
+    "vendor_address": [
+      "400 Lantern Hill Avenue, Suite 12",
+      "Cordale, ZZ 90514"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": {
+      "seed": 103,
+      "rotation_degrees": 0.7,
+      "noise": 0.06,
+      "dpi": 150
+    },
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

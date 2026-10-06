@@ -1,0 +1,676 @@
+%PDF-1.4
+%“Œ‹ž ReportLab Generated PDF document (opensource)
+1 0 obj
+<<
+/F1 2 0 R /F2 3 0 R
+>>
+endobj
+2 0 obj
+<<
+/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
+>>
+endobj
+3 0 obj
+<<
+/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
+endobj
+4 0 obj
+<<
+/Contents 9 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 8 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
+endobj
+5 0 obj
+<<
+/Contents 10 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 8 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
+endobj
+6 0 obj
+<<
+/PageMode /UseNone /Pages 8 0 R /Type /Catalog
+>>
+endobj
+7 0 obj
+<<
+/Author (Velmora Logistics LLC) /CreationDate (D:20000101000000+00'00') /Creator (invoice-automation synthetic corpus) /Keywords () /ModDate (D:20000101000000+00'00') /Producer (invoice-automation synthetic corpus) 
+  /Subject (\(unspecified\)) /Title (INVOICE VL/2026/1377) /Trapped /False
+>>
+endobj
+8 0 obj
+<<
+/Count 2 /Kids [ 4 0 R 5 0 R ] /Type /Pages
+>>
+endobj
+9 0 obj
+<<
+/Length 10947
+>>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 57.02362 760.8661 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 10 Tm /F2 14 Tf 24 TL 164.7622 0 Td (Velmora Logistics LLC) Tj T* -164.7622 0 Td ET
+Q
+Q
+q
+1 0 0 1 57.02362 750.8661 cm
+q
+.419608 .447059 .501961 rg
+BT 1 0 0 1 0 2 Tm /F1 8 Tf 10 TL 103.8982 0 Td (Unit 4, Fenwick Trade Park \267 Hollins Cross, ZZ 31108 \267 Tax ID: ZZ771034592) Tj T* -103.8982 0 Td ET
+Q
+Q
+q
+1 0 0 1 57.02362 746.0661 cm
+q
+.8 w
+1 J
+.419608 .447059 .501961 RG
+n 0 0 m 481.2283 0 l S
+Q
+Q
+q
+1 0 0 1 57.02362 716.0661 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 10 Tm /F2 14 Tf 24 TL 211.8302 0 Td (INVOICE) Tj T* -211.8302 0 Td ET
+Q
+Q
+q
+1 0 0 1 57.02362 699.0583 cm
+Q
+q
+1 0 0 1 51.02362 629.0583 cm
+q
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 0 3 cm
+q
+.121569 .160784 .2 rg
+BT /F2 9 Tf 12 TL ET
+BT 1 0 0 1 0 53 Tm (Document No.) Tj T* ET
+BT /F1 9 Tf 12 TL ET
+BT 1 0 0 1 96.37795 53 Tm (VL/2026/1377) Tj T* ET
+BT /F2 9 Tf 12 TL ET
+BT 1 0 0 1 0 37 Tm (Date of issue) Tj T* ET
+BT /F1 9 Tf 12 TL ET
+BT 1 0 0 1 96.37795 37 Tm (16 Sep 2026) Tj T* ET
+BT /F2 9 Tf 12 TL ET
+BT 1 0 0 1 0 21 Tm (Payment due) Tj T* ET
+BT /F1 9 Tf 12 TL ET
+BT 1 0 0 1 96.37795 21 Tm (16 Oct 2026) Tj T* ET
+BT /F2 9 Tf 12 TL ET
+BT 1 0 0 1 0 5 Tm (Currency) Tj T* ET
+BT /F1 9 Tf 12 TL ET
+BT 1 0 0 1 96.37795 5 Tm (GBP) Tj T* ET
+q
+Q
+Q
+Q
+q
+1 0 0 1 246.6142 7 cm
+q
+BT 1 0 0 1 0 51 Tm 12 TL /F2 9 Tf .121569 .160784 .2 rg (Bill to) Tj /F1 9 Tf  T* (Lumen Harbor Trading Ltd) Tj  T* (Accounts Payable) Tj  T* (7 Saltmarsh Row) Tj  T* (Port Elnor, ZZ 20417) Tj T* ET
+Q
+Q
+q
+Q
+Q
+Q
+q
+1 0 0 1 57.02362 612.0504 cm
+Q
+q
+1 0 0 1 51.02362 72.05039 cm
+q
+.121569 .160784 .2 rg
+BT /F2 9 Tf 12 TL ET
+BT 1 0 0 1 6 528 Tm (#) Tj T* ET
+BT 1 0 0 1 34.34646 528 Tm (Description) Tj T* ET
+BT 1 0 0 1 286.3149 528 Tm (Quantity) Tj T* ET
+BT 1 0 0 1 360.681 528 Tm (Unit price) Tj T* ET
+BT 1 0 0 1 453.2353 528 Tm (Amount) Tj T* ET
+BT /F1 9 Tf 12 TL ET
+BT 1 0 0 1 6 510 Tm (1) Tj T* ET
+q
+1 0 0 1 34.34646 507 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Customs documentation) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 510 Tm (3) Tj T* ET
+BT 1 0 0 1 379.671 510 Tm (55.00) Tj T* ET
+BT 1 0 0 1 459.7063 510 Tm (165.00) Tj T* ET
+BT 1 0 0 1 6 492 Tm (2) Tj T* ET
+q
+1 0 0 1 34.34646 489 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Pallet freight, Hollins Cross to Ardley) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 492 Tm (2) Tj T* ET
+BT 1 0 0 1 374.667 492 Tm (145.00) Tj T* ET
+BT 1 0 0 1 459.7063 492 Tm (290.00) Tj T* ET
+BT 1 0 0 1 6 474 Tm (3) Tj T* ET
+q
+1 0 0 1 34.34646 471 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Fuel surcharge) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 474 Tm (3) Tj T* ET
+BT 1 0 0 1 379.671 474 Tm (22.40) Tj T* ET
+BT 1 0 0 1 464.7103 474 Tm (67.20) Tj T* ET
+BT 1 0 0 1 6 456 Tm (4) Tj T* ET
+q
+1 0 0 1 34.34646 453 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Weekend collection) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 456 Tm (2) Tj T* ET
+BT 1 0 0 1 379.671 456 Tm (45.00) Tj T* ET
+BT 1 0 0 1 464.7103 456 Tm (90.00) Tj T* ET
+BT 1 0 0 1 6 438 Tm (5) Tj T* ET
+q
+1 0 0 1 34.34646 435 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Pick and pack \(per order\)) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 438 Tm (3) Tj T* ET
+BT 1 0 0 1 384.675 438 Tm (2.85) Tj T* ET
+BT 1 0 0 1 469.7143 438 Tm (8.55) Tj T* ET
+BT 1 0 0 1 6 420 Tm (6) Tj T* ET
+q
+1 0 0 1 34.34646 417 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Customs documentation) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 420 Tm (2) Tj T* ET
+BT 1 0 0 1 379.671 420 Tm (55.00) Tj T* ET
+BT 1 0 0 1 459.7063 420 Tm (110.00) Tj T* ET
+BT 1 0 0 1 6 402 Tm (7) Tj T* ET
+q
+1 0 0 1 34.34646 399 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Weekend collection) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 402 Tm (1) Tj T* ET
+BT 1 0 0 1 379.671 402 Tm (45.00) Tj T* ET
+BT 1 0 0 1 464.7103 402 Tm (45.00) Tj T* ET
+BT 1 0 0 1 6 384 Tm (8) Tj T* ET
+q
+1 0 0 1 34.34646 381 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Weekend collection) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 384 Tm (3) Tj T* ET
+BT 1 0 0 1 379.671 384 Tm (45.00) Tj T* ET
+BT 1 0 0 1 459.7063 384 Tm (135.00) Tj T* ET
+BT 1 0 0 1 6 366 Tm (9) Tj T* ET
+q
+1 0 0 1 34.34646 363 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Warehouse storage \(pallet-week\)) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 366 Tm (3) Tj T* ET
+BT 1 0 0 1 384.675 366 Tm (6.75) Tj T* ET
+BT 1 0 0 1 464.7103 366 Tm (20.25) Tj T* ET
+BT 1 0 0 1 6 348 Tm (10) Tj T* ET
+q
+1 0 0 1 34.34646 345 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Weekend collection) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 348 Tm (1) Tj T* ET
+BT 1 0 0 1 379.671 348 Tm (45.00) Tj T* ET
+BT 1 0 0 1 464.7103 348 Tm (45.00) Tj T* ET
+BT 1 0 0 1 6 330 Tm (11) Tj T* ET
+q
+1 0 0 1 34.34646 327 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Cross-docking \(per pallet\)) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 330 Tm (2) Tj T* ET
+BT 1 0 0 1 379.671 330 Tm (12.75) Tj T* ET
+BT 1 0 0 1 464.7103 330 Tm (25.50) Tj T* ET
+BT 1 0 0 1 6 312 Tm (12) Tj T* ET
+q
+1 0 0 1 34.34646 309 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Cross-docking \(per pallet\)) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 312 Tm (1) Tj T* ET
+BT 1 0 0 1 379.671 312 Tm (12.75) Tj T* ET
+BT 1 0 0 1 464.7103 312 Tm (12.75) Tj T* ET
+BT 1 0 0 1 6 294 Tm (13) Tj T* ET
+q
+1 0 0 1 34.34646 291 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Tail-lift delivery) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 294 Tm (1) Tj T* ET
+BT 1 0 0 1 379.671 294 Tm (30.00) Tj T* ET
+BT 1 0 0 1 464.7103 294 Tm (30.00) Tj T* ET
+BT 1 0 0 1 6 276 Tm (14) Tj T* ET
+q
+1 0 0 1 34.34646 273 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Stock count \(per hour\)) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 276 Tm (1) Tj T* ET
+BT 1 0 0 1 379.671 276 Tm (32.00) Tj T* ET
+BT 1 0 0 1 464.7103 276 Tm (32.00) Tj T* ET
+BT 1 0 0 1 6 258 Tm (15) Tj T* ET
+q
+1 0 0 1 34.34646 255 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Pallet hire \(per week\)) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 258 Tm (1) Tj T* ET
+BT 1 0 0 1 384.675 258 Tm (4.20) Tj T* ET
+BT 1 0 0 1 469.7143 258 Tm (4.20) Tj T* ET
+BT 1 0 0 1 6 240 Tm (16) Tj T* ET
+q
+1 0 0 1 34.34646 237 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Next-day parcel, up to 10 kg) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 240 Tm (3) Tj T* ET
+BT 1 0 0 1 379.671 240 Tm (11.90) Tj T* ET
+BT 1 0 0 1 464.7103 240 Tm (35.70) Tj T* ET
+BT 1 0 0 1 6 222 Tm (17) Tj T* ET
+q
+1 0 0 1 34.34646 219 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Timed delivery slot) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 222 Tm (1) Tj T* ET
+BT 1 0 0 1 379.671 222 Tm (18.00) Tj T* ET
+BT 1 0 0 1 464.7103 222 Tm (18.00) Tj T* ET
+BT 1 0 0 1 6 204 Tm (18) Tj T* ET
+q
+1 0 0 1 34.34646 201 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Next-day parcel, up to 10 kg) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 204 Tm (2) Tj T* ET
+BT 1 0 0 1 379.671 204 Tm (11.90) Tj T* ET
+BT 1 0 0 1 464.7103 204 Tm (23.80) Tj T* ET
+BT 1 0 0 1 6 186 Tm (19) Tj T* ET
+q
+1 0 0 1 34.34646 183 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Timed delivery slot) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 186 Tm (2) Tj T* ET
+BT 1 0 0 1 379.671 186 Tm (18.00) Tj T* ET
+BT 1 0 0 1 464.7103 186 Tm (36.00) Tj T* ET
+BT 1 0 0 1 6 168 Tm (20) Tj T* ET
+q
+1 0 0 1 34.34646 165 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Two-person delivery) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 168 Tm (2) Tj T* ET
+BT 1 0 0 1 379.671 168 Tm (64.00) Tj T* ET
+BT 1 0 0 1 459.7063 168 Tm (128.00) Tj T* ET
+BT 1 0 0 1 6 150 Tm (21) Tj T* ET
+q
+1 0 0 1 34.34646 147 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Tail-lift delivery) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 150 Tm (3) Tj T* ET
+BT 1 0 0 1 379.671 150 Tm (30.00) Tj T* ET
+BT 1 0 0 1 464.7103 150 Tm (90.00) Tj T* ET
+BT 1 0 0 1 6 132 Tm (22) Tj T* ET
+q
+1 0 0 1 34.34646 129 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Cross-docking \(per pallet\)) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 132 Tm (2) Tj T* ET
+BT 1 0 0 1 379.671 132 Tm (12.75) Tj T* ET
+BT 1 0 0 1 464.7103 132 Tm (25.50) Tj T* ET
+BT 1 0 0 1 6 114 Tm (23) Tj T* ET
+q
+1 0 0 1 34.34646 111 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Returns handling \(per item\)) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 114 Tm (2) Tj T* ET
+BT 1 0 0 1 384.675 114 Tm (3.40) Tj T* ET
+BT 1 0 0 1 469.7143 114 Tm (6.80) Tj T* ET
+BT 1 0 0 1 6 96 Tm (24) Tj T* ET
+q
+1 0 0 1 34.34646 93 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Weekend collection) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 96 Tm (3) Tj T* ET
+BT 1 0 0 1 379.671 96 Tm (45.00) Tj T* ET
+BT 1 0 0 1 459.7063 96 Tm (135.00) Tj T* ET
+BT 1 0 0 1 6 78 Tm (25) Tj T* ET
+q
+1 0 0 1 34.34646 75 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Packaging materials) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 78 Tm (3) Tj T* ET
+BT 1 0 0 1 379.671 78 Tm (16.60) Tj T* ET
+BT 1 0 0 1 464.7103 78 Tm (49.80) Tj T* ET
+BT 1 0 0 1 6 60 Tm (26) Tj T* ET
+q
+1 0 0 1 34.34646 57 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Cross-docking \(per pallet\)) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 60 Tm (1) Tj T* ET
+BT 1 0 0 1 379.671 60 Tm (12.75) Tj T* ET
+BT 1 0 0 1 464.7103 60 Tm (12.75) Tj T* ET
+BT 1 0 0 1 6 42 Tm (27) Tj T* ET
+q
+1 0 0 1 34.34646 39 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Packaging materials) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 42 Tm (3) Tj T* ET
+BT 1 0 0 1 379.671 42 Tm (16.60) Tj T* ET
+BT 1 0 0 1 464.7103 42 Tm (49.80) Tj T* ET
+BT 1 0 0 1 6 24 Tm (28) Tj T* ET
+q
+1 0 0 1 34.34646 21 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Returns handling \(per item\)) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 24 Tm (1) Tj T* ET
+BT 1 0 0 1 384.675 24 Tm (3.40) Tj T* ET
+BT 1 0 0 1 469.7143 24 Tm (3.40) Tj T* ET
+BT 1 0 0 1 6 6 Tm (29) Tj T* ET
+q
+1 0 0 1 34.34646 3 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Weekend collection) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 6 Tm (2) Tj T* ET
+BT 1 0 0 1 379.671 6 Tm (45.00) Tj T* ET
+BT 1 0 0 1 464.7103 6 Tm (90.00) Tj T* ET
+q
+1 J
+1 j
+.121569 .160784 .2 RG
+.8 w
+n 0 522 m 493.2283 522 l S
+.780392 .807843 .831373 RG
+.25 w
+n 0 504 m 493.2283 504 l S
+n 0 486 m 493.2283 486 l S
+n 0 468 m 493.2283 468 l S
+n 0 450 m 493.2283 450 l S
+n 0 432 m 493.2283 432 l S
+n 0 414 m 493.2283 414 l S
+n 0 396 m 493.2283 396 l S
+n 0 378 m 493.2283 378 l S
+n 0 360 m 493.2283 360 l S
+n 0 342 m 493.2283 342 l S
+n 0 324 m 493.2283 324 l S
+n 0 306 m 493.2283 306 l S
+n 0 288 m 493.2283 288 l S
+n 0 270 m 493.2283 270 l S
+n 0 252 m 493.2283 252 l S
+n 0 234 m 493.2283 234 l S
+n 0 216 m 493.2283 216 l S
+n 0 198 m 493.2283 198 l S
+n 0 180 m 493.2283 180 l S
+n 0 162 m 493.2283 162 l S
+n 0 144 m 493.2283 144 l S
+n 0 126 m 493.2283 126 l S
+n 0 108 m 493.2283 108 l S
+n 0 90 m 493.2283 90 l S
+n 0 72 m 493.2283 72 l S
+n 0 54 m 493.2283 54 l S
+n 0 36 m 493.2283 36 l S
+n 0 18 m 493.2283 18 l S
+n 0 0 m 493.2283 0 l S
+Q
+Q
+Q
+ 
+endstream
+endobj
+10 0 obj
+<<
+/Length 3109
+>>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 51.02362 640.8661 cm
+q
+.121569 .160784 .2 rg
+BT /F2 9 Tf 12 TL ET
+BT 1 0 0 1 6 132 Tm (#) Tj T* ET
+BT 1 0 0 1 34.34646 132 Tm (Description) Tj T* ET
+BT 1 0 0 1 286.3149 132 Tm (Quantity) Tj T* ET
+BT 1 0 0 1 360.681 132 Tm (Unit price) Tj T* ET
+BT 1 0 0 1 453.2353 132 Tm (Amount) Tj T* ET
+BT /F1 9 Tf 12 TL ET
+BT 1 0 0 1 6 114 Tm (30) Tj T* ET
+q
+1 0 0 1 34.34646 111 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Pallet hire \(per week\)) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 114 Tm (3) Tj T* ET
+BT 1 0 0 1 384.675 114 Tm (4.20) Tj T* ET
+BT 1 0 0 1 464.7103 114 Tm (12.60) Tj T* ET
+BT 1 0 0 1 6 96 Tm (31) Tj T* ET
+q
+1 0 0 1 34.34646 93 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Shrink wrapping \(per pallet\)) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 96 Tm (1) Tj T* ET
+BT 1 0 0 1 384.675 96 Tm (8.50) Tj T* ET
+BT 1 0 0 1 469.7143 96 Tm (8.50) Tj T* ET
+BT 1 0 0 1 6 78 Tm (32) Tj T* ET
+q
+1 0 0 1 34.34646 75 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Two-person delivery) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 78 Tm (2) Tj T* ET
+BT 1 0 0 1 379.671 78 Tm (64.00) Tj T* ET
+BT 1 0 0 1 459.7063 78 Tm (128.00) Tj T* ET
+BT 1 0 0 1 6 60 Tm (33) Tj T* ET
+q
+1 0 0 1 34.34646 57 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Fuel surcharge) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 60 Tm (1) Tj T* ET
+BT 1 0 0 1 379.671 60 Tm (22.40) Tj T* ET
+BT 1 0 0 1 464.7103 60 Tm (22.40) Tj T* ET
+BT 1 0 0 1 6 42 Tm (34) Tj T* ET
+q
+1 0 0 1 34.34646 39 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Container unloading, 20 ft) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 42 Tm (2) Tj T* ET
+BT 1 0 0 1 374.667 42 Tm (210.00) Tj T* ET
+BT 1 0 0 1 459.7063 42 Tm (420.00) Tj T* ET
+BT 1 0 0 1 6 24 Tm (35) Tj T* ET
+q
+1 0 0 1 34.34646 21 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Insurance cover, goods in transit) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 24 Tm (3) Tj T* ET
+BT 1 0 0 1 379.671 24 Tm (27.50) Tj T* ET
+BT 1 0 0 1 464.7103 24 Tm (82.50) Tj T* ET
+BT 1 0 0 1 6 6 Tm (36) Tj T* ET
+q
+1 0 0 1 34.34646 3 cm
+q
+.121569 .160784 .2 rg
+BT 1 0 0 1 0 3 Tm /F1 9 Tf 12 TL (Next-day parcel, up to 10 kg) Tj T* ET
+Q
+Q
+BT 1 0 0 1 317.8149 6 Tm (3) Tj T* ET
+BT 1 0 0 1 379.671 6 Tm (11.90) Tj T* ET
+BT 1 0 0 1 464.7103 6 Tm (35.70) Tj T* ET
+q
+1 J
+1 j
+.121569 .160784 .2 RG
+.8 w
+n 0 126 m 493.2283 126 l S
+.780392 .807843 .831373 RG
+.25 w
+n 0 126 m 493.2283 126 l S
+n 0 108 m 493.2283 108 l S
+n 0 90 m 493.2283 90 l S
+n 0 72 m 493.2283 72 l S
+n 0 54 m 493.2283 54 l S
+n 0 36 m 493.2283 36 l S
+n 0 18 m 493.2283 18 l S
+n 0 0 m 493.2283 0 l S
+Q
+Q
+Q
+q
+1 0 0 1 57.02362 629.5276 cm
+Q
+q
+1 0 0 1 283.1339 575.5276 cm
+q
+.121569 .160784 .2 rg
+BT /F1 9 Tf 12 TL ET
+BT 1 0 0 1 6 42 Tm (Subtotal) Tj T* ET
+BT 1 0 0 1 214.0901 42 Tm (2,494.70) Tj T* ET
+BT 1 0 0 1 6 24 Tm (VAT 20%) Tj T* ET
+BT 1 0 0 1 221.5961 24 Tm (498.94) Tj T* ET
+BT /F2 9 Tf 12 TL ET
+BT 1 0 0 1 6 6 Tm (Amount due) Tj T* ET
+BT 1 0 0 1 214.0901 6 Tm (2,993.64) Tj T* ET
+q
+1 J
+1 j
+.121569 .160784 .2 RG
+.8 w
+n 0 18 m 255.1181 18 l S
+Q
+Q
+Q
+q
+1 0 0 1 57.02362 558.5197 cm
+Q
+ 
+endstream
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000061 00000 n 
+0000000102 00000 n 
+0000000209 00000 n 
+0000000321 00000 n 
+0000000524 00000 n 
+0000000728 00000 n 
+0000000796 00000 n 
+0000001108 00000 n 
+0000001173 00000 n 
+0000012172 00000 n 
+trailer
+<<
+/ID 
+[<f014122f8ee744d85f31d4466612ef4e><f014122f8ee744d85f31d4466612ef4e>]
+% ReportLab generated PDF document -- digest (opensource)
+
+/Info 7 0 R
+/Root 6 0 R
+/Size 11
+>>
+startxref
+15333
+%%EOF
