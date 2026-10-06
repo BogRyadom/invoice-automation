@@ -1,5 +1,6 @@
 from typing import Any
 
+from app.extraction.contract import Extraction
 from app.extraction.provider import Completion, ExtractionPath
 
 
@@ -30,3 +31,21 @@ class ScriptedProvider:
             output_tokens=50,
             finish_reason="stop",
         )
+
+
+NOT_AN_INVOICE = Extraction(
+    document_type="other",
+    vendor_name_raw=None,
+    vendor_tax_id_raw=None,
+    invoice_number_raw=None,
+    invoice_date_raw=None,
+    due_date_raw=None,
+    currency_raw=None,
+    subtotal_raw=None,
+    discount_raw=None,
+    shipping_raw=None,
+    tax_lines=[],
+    tax_inclusive_note_raw=None,
+    total_raw=None,
+    line_items=[],
+).model_dump_json()

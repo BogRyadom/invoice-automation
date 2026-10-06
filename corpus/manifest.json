@@ -1,6 +1,6 @@
 {
   "corpus": "synthetic",
-  "size": 34,
+  "size": 35,
   "documents": [
     {
       "doc_id": "clean_01",
@@ -61,6 +61,11 @@
       "doc_id": "clean_12",
       "filename": "clean_12.pdf",
       "sha256": "5f1b1d34c28fd2aa42ee042eacac188a70f8025693836ef40085ff5cd70889a8"
+    },
+    {
+      "doc_id": "clean_13",
+      "filename": "clean_13.pdf",
+      "sha256": "fe0674bea64194b981207c01dd624b8f2ccb64cb97e5042d74d2a71a8aa7355f"
     },
     {
       "doc_id": "complex_01",

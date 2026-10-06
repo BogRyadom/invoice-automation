@@ -453,6 +453,17 @@ def build_documents() -> list[GroundTruth]:
             items=picks(OSTBERG, (1, 1), (3, 2)),
             flags=["W3"],
         ),
+        invoice(
+            "clean_13",
+            "clean",
+            "ISO dates with day and month both 12 or below",
+            VELMORA,
+            layout="classic",
+            number="VL/2026/1395",
+            issued=date(2026, 9, 3),
+            date_style="iso",
+            items=picks(VELMORA, (2, 20), (4, 1), (13, 2)),
+        ),
     ]
     complex_ = [
         invoice(

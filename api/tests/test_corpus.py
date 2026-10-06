@@ -22,9 +22,9 @@ from corpus.storage import (
     load_manifest,
 )
 
-# Composition required by docs/SPEC.md section 14.
+# Composition required by docs/SPEC.md section 14. Year-first ISO dates are never ambiguous.
 SPEC_COMPOSITION = {
-    "clean": 12,
+    "clean": 13,
     "complex": 4,
     "european": 3,
     "multipage": 2,
@@ -38,7 +38,7 @@ SPEC_COMPOSITION = {
 AMOUNT_TOLERANCE = Decimal("0.02")
 AUTO_APPROVE_MAX_TOTAL = Decimal("5000")
 CORPUS_AS_OF = date(2026, 10, 1)
-NUMERIC_DATE = re.compile(r"^\d{1,4}[./-]\d{1,2}[./-]\d{1,4}$")
+NUMERIC_DATE = re.compile(r"^\d{1,2}[./-]\d{1,2}[./-]\d{2,4}$")
 HAS_DECIMALS = re.compile(r"[.,]\d{2}$")
 
 
@@ -143,7 +143,7 @@ def derived_flags(doc: GroundTruth, known_keys: set[str]) -> set[str]:
 
 def test_composition_matches_spec(corpus: list[GroundTruth]) -> None:
     assert Counter(doc.group for doc in corpus) == SPEC_COMPOSITION
-    assert len(corpus) == 34
+    assert len(corpus) == 35
 
 
 def test_manifest_matches_files(corpus: list[GroundTruth]) -> None:

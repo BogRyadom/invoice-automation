@@ -8,12 +8,12 @@ from app.config import get_settings
 from app.extraction.groq_provider import GroqProvider
 from corpus.storage import load_corpus
 from eval.metrics import EvalReport, Prediction, evaluate
-from eval.predictors import EvalAborted, LlmPredictor, OraclePredictor, Predictor
+from eval.predictors import EvalAborted, OraclePredictor, PipelinePredictor, Predictor
 from eval.report import RESULTS_DIR, render_markdown, write_results
 
 # One text invoice, one scan and one non-invoice: exercises every path in a few calls.
 SMOKE_DOCS = ("clean_04", "scan_01", "not_invoice_03")
-SMOKE_FAILURES = ("stopped: llm_unavailable", "stopped: invalid_extraction")
+SMOKE_FAILURES = frozenset({"llm_unavailable", "invalid_extraction"})
 
 
 def build_predictor(name: str) -> Predictor:
@@ -25,7 +25,7 @@ def build_predictor(name: str) -> Predictor:
         provider = GroqProvider(settings)
     except ValueError as exc:
         raise SystemExit(f"Cannot start the LLM eval: {exc}. See .env.example.") from exc
-    return LlmPredictor(provider, settings)
+    return PipelinePredictor(provider, settings, admin_url=settings.database_url)
 
 
 def oracle_failures(report: EvalReport) -> list[str]:
@@ -46,11 +46,16 @@ def oracle_failures(report: EvalReport) -> list[str]:
 
 
 def document_lines(report: EvalReport) -> list[str]:
-    """One line per document: outcome and the fields that did not match."""
-    return [
-        f"  {doc.doc_id:16} {doc.outcome or '-':40} wrong: {', '.join(doc.wrong_fields) or '-'}"
-        for doc in report.documents
-    ]
+    """One line per document: outcome, raised checks, route verdict and wrong fields."""
+    lines = []
+    for doc in report.documents:
+        flags = ",".join(doc.predicted_flags) or "-"
+        verdict = "route ok" if doc.route_matches else f"route expected {doc.expected_status}"
+        wrong = ", ".join(doc.wrong_fields) or "-"
+        lines.append(
+            f"  {doc.doc_id:16} {doc.outcome or '-':30} {flags:10} {verdict:32} wrong: {wrong}"
+        )
+    return lines
 
 
 def token_summary(predictions: Sequence[Prediction]) -> str:
@@ -106,7 +111,7 @@ def main(
 
     print(token_summary(predictions))
     if args.smoke:
-        broken = [p.doc_id for p in predictions if (p.outcome or "").startswith(SMOKE_FAILURES)]
+        broken = [p.doc_id for p in predictions if p.status is None or p.reason in SMOKE_FAILURES]
         if broken:
             print(f"Smoke check failed for: {', '.join(broken)}", file=sys.stderr)
             return 1

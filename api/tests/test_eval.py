@@ -8,15 +8,14 @@ from pathlib import Path
 import pytest
 
 from app.config import Settings
-from app.extraction.contract import Extraction
 from app.extraction.provider import ProviderUnavailable
 from corpus.models import GroundTruth
 from corpus.storage import load_corpus
 from eval.metrics import Prediction, Ratio, Stats, evaluate, stats
-from eval.predictors import LlmPredictor, OraclePredictor, Predictor
+from eval.predictors import OraclePredictor, PipelinePredictor, Predictor
 from eval.report import write_results
 from eval.run_eval import SMOKE_DOCS, main, oracle_failures
-from tests.fakes import ScriptedProvider
+from tests.fakes import NOT_AN_INVOICE, ScriptedProvider
 
 RUN_DATE = date(2026, 10, 6)
 
@@ -46,10 +45,10 @@ def test_oracle_scores_perfectly(corpus: list[GroundTruth], oracle: list[Predict
     report = evaluate(corpus, oracle)
 
     assert oracle_failures(report) == []
-    assert report.field_accuracy["total"] == Ratio(28, 28)
-    assert report.document_type_accuracy == Ratio(31, 31)
-    assert report.review_rate == Ratio(13, 28)
-    assert report.auto_approve_precision == Ratio(15, 15)
+    assert report.field_accuracy["total"] == Ratio(29, 29)
+    assert report.document_type_accuracy == Ratio(32, 32)
+    assert report.review_rate == Ratio(13, 29)
+    assert report.auto_approve_precision == Ratio(16, 16)
     assert report.errors_sent_to_review == Ratio(0, 0)
 
 
@@ -60,8 +59,8 @@ def test_wrong_value_that_is_auto_approved_lowers_precision(
 
     report = evaluate(corpus, predictions)
 
-    assert report.field_accuracy["total"] == Ratio(27, 28)
-    assert report.auto_approve_precision == Ratio(14, 15)
+    assert report.field_accuracy["total"] == Ratio(28, 29)
+    assert report.auto_approve_precision == Ratio(15, 16)
     assert report.errors_sent_to_review == Ratio(0, 1)
     assert oracle_failures(report) != []
 
@@ -77,8 +76,8 @@ def test_wrong_value_sent_to_review_counts_as_caught(
     report = evaluate(corpus, predictions)
 
     assert report.errors_sent_to_review == Ratio(1, 1)
-    assert report.auto_approve_precision == Ratio(14, 14)
-    assert report.review_rate == Ratio(14, 28)
+    assert report.auto_approve_precision == Ratio(15, 15)
+    assert report.review_rate == Ratio(14, 29)
 
 
 def test_invoice_classified_as_other(corpus: list[GroundTruth], oracle: list[Prediction]) -> None:
@@ -88,9 +87,9 @@ def test_invoice_classified_as_other(corpus: list[GroundTruth], oracle: list[Pre
 
     report = evaluate(corpus, predictions)
 
-    assert report.document_type_accuracy == Ratio(30, 31)
-    assert report.field_accuracy["invoice_number"] == Ratio(27, 28)
-    assert report.review_rate == Ratio(13, 27)
+    assert report.document_type_accuracy == Ratio(31, 32)
+    assert report.field_accuracy["invoice_number"] == Ratio(28, 29)
+    assert report.review_rate == Ratio(13, 28)
     assert report.errors_sent_to_review == Ratio(0, 0)
     wrong = next(d for d in report.documents if d.doc_id == "clean_02")
     assert wrong.predicted_status == "skipped"
@@ -109,8 +108,8 @@ def test_missing_line_item(corpus: list[GroundTruth], oracle: list[Prediction]) 
 
     report = evaluate(corpus, predictions)
 
-    assert report.line_item_count_match == Ratio(27, 28)
-    assert report.line_item_amounts_match == Ratio(27, 28)
+    assert report.line_item_count_match == Ratio(28, 29)
+    assert report.line_item_amounts_match == Ratio(28, 29)
 
 
 @pytest.mark.parametrize(
@@ -158,9 +157,9 @@ def test_write_results_names_files_and_never_overwrites(
     assert second.name == "2026-10-06_groq_openai-gpt-oss-120b_2.json"
     assert first.with_suffix(".md").exists()
     data = json.loads(first.read_text(encoding="utf-8"))
-    assert data["corpus"] == {"size": 34, "synthetic": True}
-    assert data["review_rate"] == {"hits": 13, "total": 28}
-    assert len(data["documents"]) == 34
+    assert data["corpus"] == {"size": 35, "synthetic": True}
+    assert data["review_rate"] == {"hits": 13, "total": 29}
+    assert len(data["documents"]) == 35
 
 
 def test_oracle_results_are_never_written(
@@ -182,75 +181,72 @@ def test_cli_oracle_run_passes_and_saves_nothing(
     assert main(["--predictor", "oracle"], today=RUN_DATE, results_dir=tmp_path) == 0
 
     output = capsys.readouterr().out
-    assert "| Review rate | 46.4% (13/28) |" in output
+    assert "| Review rate | 44.8% (13/29) |" in output
     assert "Harness check passed" in output
     assert list(tmp_path.iterdir()) == []
 
 
-NOT_AN_INVOICE = Extraction(
-    document_type="other",
-    vendor_name_raw=None,
-    vendor_tax_id_raw=None,
-    invoice_number_raw=None,
-    invoice_date_raw=None,
-    due_date_raw=None,
-    currency_raw=None,
-    subtotal_raw=None,
-    discount_raw=None,
-    shipping_raw=None,
-    tax_lines=[],
-    tax_inclusive_note_raw=None,
-    total_raw=None,
-    line_items=[],
-).model_dump_json()
+RECORDED = json.loads((Path(__file__).parent / "fixtures" / "recorded_answers.json").read_text())
 
 
-def correct_answers(docs: list[GroundTruth]) -> list[str | Exception]:
-    """What a perfect model would answer, in the order the pipeline calls it."""
-    return [
-        doc.printed.model_dump_json() if doc.printed else NOT_AN_INVOICE
-        for doc in docs
-        if doc.extraction_path is not None
-    ]
+def recorded_answers(docs: list[GroundTruth]) -> list[str | Exception]:
+    """Recorded Stage 2 model answers in pipeline call order; newer documents use printed values."""
+    answers: list[str | Exception] = []
+    for doc in docs:
+        if doc.extraction_path is None:
+            continue
+        fallback = doc.printed.model_dump_json() if doc.printed else NOT_AN_INVOICE
+        answers.append(RECORDED["answers"].get(doc.doc_id, fallback))
+    return answers
 
 
-def llm_factory(settings: Settings, answers: list[str | Exception]) -> Callable[[str], Predictor]:
+def pipeline_factory(
+    settings: Settings, admin_url: str, answers: list[str | Exception]
+) -> Callable[[str], Predictor]:
     def factory(_: str) -> Predictor:
-        return LlmPredictor(ScriptedProvider(answers), settings, log=lambda _: None)
+        provider = ScriptedProvider(answers)
+        return PipelinePredictor(provider, settings, admin_url, log=lambda _: None)
 
     return factory
 
 
-def test_full_llm_run_through_the_pipeline(
-    settings: Settings, corpus: list[GroundTruth], tmp_path: Path
+@pytest.mark.db
+def test_full_pipeline_reproduces_every_expected_route(
+    settings: Settings, admin_database_url: str, corpus: list[GroundTruth], tmp_path: Path
 ) -> None:
-    factory = llm_factory(settings, correct_answers(corpus))
+    factory = pipeline_factory(settings, admin_database_url, recorded_answers(corpus))
 
     assert main([], today=RUN_DATE, results_dir=tmp_path, predictor_factory=factory) == 0
 
     [saved] = tmp_path.glob("*.json")
     data = json.loads(saved.read_text(encoding="utf-8"))
-    assert saved.name == "2026-10-06_fake_fake-text-fake-vision.json"
-    assert data["field_accuracy"]["total"] == {"hits": 28, "total": 28}
-    assert data["line_item_amounts_match"] == {"hits": 28, "total": 28}
-    assert data["document_type_accuracy"] == {"hits": 31, "total": 31}
-    assert data["review_rate"] == {"hits": 0, "total": 0}
+    mismatched = [
+        (doc["doc_id"], doc["predicted_status"], doc["predicted_flags"])
+        for doc in data["documents"]
+        if doc["predicted_status"] != doc["expected_status"]
+        or set(doc["predicted_flags"]) != set(doc["expected_flags"])
+    ]
+    assert mismatched == []
+    assert data["field_accuracy"]["total"] == {"hits": 29, "total": 29}
+    assert data["document_type_accuracy"] == {"hits": 32, "total": 32}
+    assert data["review_rate"] == {"hits": 13, "total": 29}
+    assert data["auto_approve_precision"] == {"hits": 16, "total": 16}
     assert data["errors_sent_to_review"] == {"hits": 0, "total": 0}
     outcomes = {doc["doc_id"]: doc["outcome"] for doc in data["documents"]}
     assert outcomes["duplicate_01"] == "skipped: duplicate_file"
-    assert outcomes["broken_01"] == "stopped: unreadable_pdf"
-    assert outcomes["broken_02"] == "stopped: encrypted_pdf"
-    assert outcomes["scan_01"] == "extracted (vision, 1 call(s))"
+    assert outcomes["broken_02"] == "failed: encrypted_pdf"
 
 
+@pytest.mark.db
 def test_smoke_run_saves_nothing(
     settings: Settings,
+    admin_database_url: str,
     corpus: list[GroundTruth],
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     smoke_docs = [doc for doc in corpus if doc.doc_id in SMOKE_DOCS]
-    factory = llm_factory(settings, correct_answers(smoke_docs))
+    factory = pipeline_factory(settings, admin_database_url, recorded_answers(smoke_docs))
 
     exit_code = main(["--smoke"], today=RUN_DATE, results_dir=tmp_path, predictor_factory=factory)
 
@@ -259,18 +255,24 @@ def test_smoke_run_saves_nothing(
     assert list(tmp_path.iterdir()) == []
 
 
-def test_smoke_run_fails_when_the_llm_is_unavailable(settings: Settings, tmp_path: Path) -> None:
-    factory = llm_factory(settings, [ProviderUnavailable("down") for _ in SMOKE_DOCS])
+@pytest.mark.db
+def test_smoke_run_fails_when_the_llm_is_unavailable(
+    settings: Settings, admin_database_url: str, tmp_path: Path
+) -> None:
+    answers: list[str | Exception] = [ProviderUnavailable("down") for _ in SMOKE_DOCS]
+    factory = pipeline_factory(settings, admin_database_url, answers)
 
     exit_code = main(["--smoke"], today=RUN_DATE, results_dir=tmp_path, predictor_factory=factory)
 
     assert exit_code == 1
 
 
+@pytest.mark.db
 def test_fatal_provider_error_stops_the_run_without_saving(
-    settings: Settings, tmp_path: Path
+    settings: Settings, admin_database_url: str, tmp_path: Path
 ) -> None:
-    factory = llm_factory(settings, [ProviderUnavailable("daily quota", fatal=True)])
+    answers: list[str | Exception] = [ProviderUnavailable("daily quota", fatal=True)]
+    factory = pipeline_factory(settings, admin_database_url, answers)
 
     assert main([], today=RUN_DATE, results_dir=tmp_path, predictor_factory=factory) == 2
     assert list(tmp_path.iterdir()) == []

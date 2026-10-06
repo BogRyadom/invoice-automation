@@ -79,6 +79,8 @@ failed → approved      (ручной ввод, approval_mode = manual_entry)
 
 Каждый переход пишется в `document_events`. Недопустимый переход отклоняется на уровне кода и покрыт тестом.
 
+Очередь: worker берёт документ в статусе `received`, документ в `processing` без `locked_at` (после Reprocess) или документ в `processing`, чей `locked_at` старше `PROCESSING_TIMEOUT` (worker упал). Повторный захват пишет событие `requeued` и увеличивает `attempts`; новый переход статуса для этого не нужен.
+
 ## 6. Extraction contract
 
 Принцип: LLM находит значения, код их интерпретирует. Модель возвращает строки в том виде, как они напечатаны. Числа, даты и валюту нормализует код.
@@ -132,12 +134,12 @@ Hard checks. Провал любой отправляет документ в `n
 
 | ID | Проверка | Правило |
 |---|---|---|
-| H1 | Обязательные поля | vendor_name, invoice_number, invoice_date, total, currency заполнены и нормализуются |
+| H1 | Обязательные поля | vendor_name, invoice_number, invoice_date, total, currency заполнены и нормализуются. Также падает, если любое извлечённое значение не удалось нормализовать |
 | H2 | Итог | subtotal - discount + shipping + sum(tax_lines) = total, допуск `AMOUNT_TOLERANCE` (по умолчанию 0.02). Если задан `tax_inclusive_note_raw`, налог уже внутри сумм: subtotal - discount + shipping = total |
-| H3 | Line items | sum(line_items.amount) = subtotal с тем же допуском, если line items есть |
+| H3 | Line items | sum(line_items.amount) = subtotal с тем же допуском, если line items есть. Без line items считается пройденной |
 | H4 | Grounding (текстовый путь) | raw-значения invoice_number, total, invoice_date и, если задан, tax_inclusive_note_raw дословно присутствуют в извлечённом тексте после нормализации пробелов |
-| H5 | Дубликат счёта | (vendor_id, invoice_number_normalized) уже существует. В review со ссылкой на существующую запись |
-| H6 | Даты | invoice_date не в будущем (допуск 1 день), due_date не раньше invoice_date |
+| H5 | Дубликат счёта | (vendor_id, invoice_number_normalized) уже есть среди одобренных счетов или среди документов в `needs_review`. В review со ссылкой на существующую запись |
+| H6 | Даты | invoice_date не позже даты получения письма плюс 1 день, due_date не раньше invoice_date |
 
 Warnings. Тоже отправляют в `needs_review`, поле подсвечивается:
 
@@ -146,10 +148,10 @@ Warnings. Тоже отправляют в `needs_review`, поле подсве
 | W1 | Неоднозначная дата: числовой формат, день и месяц оба не больше 12, у vendor не сохранён формат. Формат с годом впереди (ISO) не считается неоднозначным |
 | W2 | Неоднозначный формат числа. Формат определяется по всем суммам документа, warning только если определить нельзя |
 | W3 | Валюта указана только символом без кода |
-| W4 | Vendor не найден точным совпадением (новый или fuzzy-кандидат) |
+| W4 | Vendor не найден точным совпадением (новый или fuzzy-кандидат). Fuzzy: rapidfuzz `token_sort_ratio` по нормализованным именам и alias, порог `VENDOR_FUZZY_THRESHOLD`, до 3 кандидатов |
 | W5 | Документ прошёл через vision-путь, grounding не выполнялся |
 | W6 | total выше `AUTO_APPROVE_MAX_TOTAL` |
-| W7 | H2 или H3 нельзя выполнить: в документе нет subtotal или налога |
+| W7 | H2 или H3 нельзя выполнить: в документе нет subtotal, total или налога. Счёт без налоговых строк всегда идёт к человеку (решение 2026-10-06: считать налог нулём рискованно, если модель пропустила строку налога и ошиблась в subtotal) |
 | W8 | Возможный дубликат: vendor неизвестен, но совпали номер, сумма и дата с существующим счётом |
 
 Routing:
@@ -159,6 +161,8 @@ Routing:
 - По умолчанию в `.env.example` стоит `AUTO_APPROVE_ENABLED=false`.
 
 Следствие: первый счёт от любого нового vendor всегда проходит через человека (W4).
+
+Каждая проверка всегда пишет хотя бы одну строку в `check_results` (pass, fail или not_run), чтобы UI мог показать состояние рядом с полем. `not_run` у hard check тоже блокирует auto-approve. Если при auto-approve сработал уникальный индекс `invoices` (тот же счёт одобрен параллельно), документ уходит в review с H5.
 
 При Approve с правками сервер заново запускает проверки на итоговых значениях. Если hard check всё ещё не проходит (например, в самом счёте не сходятся суммы), одобрить можно только с явным override и обязательным комментарием. Это пишется в `document_events`, `approval_mode = human_override`.
 
@@ -190,7 +194,7 @@ Routing:
 | Таблица | Ключевые поля |
 |---|---|
 | `documents` | id, gmail_message_id, attachment_id, filename, sha256, storage_path, sender, subject, received_at, status, skip_reason, failure_reason, duplicate_of_document_id, extraction_path (text, vision), attempts, next_attempt_at, locked_at, last_error. UNIQUE (gmail_message_id, sha256) |
-| `extractions` | document_id, provider, model, prompt_version, raw_output JSONB, normalized JSONB, latency_ms, input_tokens, output_tokens |
+| `extractions` | document_id, provider, model, prompt_version, raw_output JSONB (все ответы модели, включая repair), normalized JSONB (document_type, нормализованный счёт, результат поиска vendor, найденные дубликаты), latency_ms, input_tokens, output_tokens |
 | `check_results` | extraction_id, check_id, severity, status, field, message |
 | `vendors` | canonical_name, normalized_name UNIQUE, tax_id UNIQUE (если задан), date_format (DMY, MDY) |
 | `vendor_aliases` | vendor_id, normalized_alias UNIQUE |
@@ -224,7 +228,8 @@ RLS включён на всех таблицах, политик нет: рол
 | 429 с ожиданием дольше `LLM_MAX_WAIT_SECONDS` (дневной лимит) или неверный API key | Без ожидания `failed: llm_unavailable`. Eval останавливается и ничего не сохраняет |
 | Скан длиннее `LLM_MAX_VISION_PAGES` (у Groq 3 изображения на запрос) | `failed: too_large`, LLM не вызывается |
 | Malformed JSON или schema не прошла (в том числе `json_validate_failed` от Groq) | Одна repair-попытка с текстом ошибок. Затем `failed: invalid_extraction` |
-| Worker упал во время processing | `locked_at` старше `PROCESSING_TIMEOUT`: задача возвращается в очередь. После лимита attempts `failed: processing_timeout` |
+| Worker упал во время processing (или Storage недоступен) | `locked_at` старше `PROCESSING_TIMEOUT`: задача возвращается в очередь. После `WORKER_MAX_ATTEMPTS` попыток `failed: processing_timeout` |
+| Provider отклоняет все запросы (ключ, дневной лимит) | Текущий документ `failed: llm_unavailable`, worker делает паузу 10 минут, чтобы не провалить всю очередь подряд |
 | n8n webhook или Slack недоступны | Outbox: до 5 попыток. Статус документа не меняется. Недоставленные события видны в stats |
 
 Общие правила: ни один retry не бесконечен. Оригинал не удаляется ни при каком исходе. Любой `failed` виден в UI с действиями Reprocess и Enter manually.
@@ -265,9 +270,9 @@ Auth: Supabase Auth. Все review endpoints требуют JWT.
 
 Корпус генерируется скриптом из ground truth JSON, поэтому разметка верна по построению. Вымышленные компании, реальных данных нет.
 
-Состав, около 34 документов:
+Состав, 35 документов:
 
-- 12 чистых счетов с текстовым слоем, 5 разных layouts
+- 13 чистых счетов с текстовым слоем, 5 разных layouts (один с ISO-датами, где день и месяц не больше 12)
 - 4 со скидкой, доставкой, несколькими ставками налога, tax-inclusive ценами
 - 3 с европейским форматом чисел и дат
 - 2 многостраничных
@@ -306,7 +311,7 @@ Auth: Supabase Auth. Все review endpoints требуют JWT.
 
 `make eval-smoke` гоняет настоящую LLM на 3 документах (текстовый счёт, скан, не-счёт), чтобы проверить настройку, не тратя дневной лимит. Результаты не сохраняются. Перед полным `make eval` запускать его.
 
-До Этапа 3 eval измеряет только extraction: поля, line items, тип документа, latency и токены. Метрики маршрутизации появятся вместе с проверками. Побайтные дубликаты, как и в pipeline, не отправляются в LLM. В результатах для каждого документа хранится сырой ответ модели.
+С Этапа 3 eval гоняет настоящий worker: документы по одному в порядке manifest попадают во временную БД, обрабатываются полностью, затем читаются статус, флаги проверок и нормализованные значения. В результатах для каждого документа хранятся ожидаемый и полученный маршрут, флаги и сырой ответ модели. Интеграционный тест прогоняет весь корпус через этот же путь с записанными ответами модели из прогона 2026-10-06 (`api/tests/fixtures/recorded_answers.json`) и требует, чтобы маршрут каждого документа совпал с ground truth.
 
 Реальная LLM вызывается только в eval (`make eval`). В CI её нет.
 
@@ -315,13 +320,13 @@ Auth: Supabase Auth. Все review endpoints требуют JWT.
 - Shared secret в обе стороны: n8n → API и API → n8n webhook. Сравнение constant-time.
 - Storage private. Превью PDF только через короткоживущий signed URL.
 - Лимиты размера и числа страниц. Тип файла проверяется по magic bytes.
-- Prompt injection: текст документа идёт в отделённом блоке данных, у модели нет tools, выход ограничен схемой. Искажённые поля ловятся H2, H3, H4. Сценарий есть в корпусе.
+- Prompt injection: текст документа идёт в отделённом блоке данных, у модели нет tools, выход ограничен схемой. Искажённые поля ловятся H2, H3, H4. Сценарий есть в корпусе. Известный пробел: если подставные значения напечатаны в самом документе скрытым текстом, H4 их находит и не срабатывает (см. вопрос 21.5).
 - В логах нет полного текста документов. Секреты только в env, в репо `.env.example`.
 
 ## 16. Tests, CI, запуск
 
 - `pytest`. Unit: нормализация чисел и дат (table-driven), vendor, проверки H и W, routing, переходы статусов, идемпотентный ingest, дубликаты, retry policy.
-- Integration: pipeline на нескольких файлах корпуса с fake provider и записанными ответами.
+- Integration: pipeline на всём корпусе с fake provider и записанными ответами модели; worker на временной БД (очередь, повторы, дубликаты, блокировки).
 - CI (GitHub Actions): `ruff`, `pytest`, для web `eslint` и `tsc`.
 - Локальный запуск одной командой: `make up` поднимает локальный Supabase и через docker compose api, worker, web. `.env.example` полный.
 
@@ -401,3 +406,4 @@ docs/                 SPEC.md, architecture, screenshots
 2. Supabase: hosted-проект или локальный стек через Supabase CLI для разработки. **Решено:** локальный стек, CI на чистом Postgres, hosted-проекта нет (решение 14).
 3. Нужен ли публичный live demo. **Решено:** нет, только video, скриншоты и воспроизводимый локальный запуск.
 4. Vision-путь: Groq принимает не больше 3 изображений в запросе. Что делать со сканами длиннее 3 страниц. **Решено на Этапе 2:** лимит задаётся настройкой `LLM_MAX_VISION_PAGES` (для Groq 3), более длинные сканы получают `failed: too_large` и вводятся вручную. Склейка ответов по частям отклонена: ошибки на стыках страниц.
+5. Скрытый текст и prompt injection (найдено на Этапе 3). Подставные значения, напечатанные в документе невидимым или крошечным шрифтом, проходят grounding (H4). Подмена суммы ловится H2, но подмена только номера счёта у известного vendor может пройти auto-approve. Варианты: убирать из текста для LLM и для H4 символы меньше заданного размера или почти белого цвета; или отдельное предупреждение, если в тексте есть фразы-команды для AI. Решить до Этапа 5.

@@ -1,0 +1,117 @@
+{
+  "doc_id": "clean_13",
+  "filename": "clean_13.pdf",
+  "group": "clean",
+  "description": "ISO dates with day and month both 12 or below",
+  "email": {
+    "sender": "accounts@velmora-logistics.example",
+    "subject": "Invoice VL/2026/1395",
+    "received_at": "2026-09-04T09:50:00Z"
+  },
+  "extraction_path": "text",
+  "document_type": "invoice",
+  "printed": {
+    "document_type": "invoice",
+    "vendor_name_raw": "Velmora Logistics LLC",
+    "vendor_tax_id_raw": "ZZ771034592",
+    "invoice_number_raw": "VL/2026/1395",
+    "invoice_date_raw": "2026-09-03",
+    "due_date_raw": "2026-10-03",
+    "currency_raw": "GBP",
+    "subtotal_raw": "198.40",
+    "discount_raw": null,
+    "shipping_raw": null,
+    "tax_lines": [
+      {
+        "label": "VAT 20%",
+        "amount_raw": "39.68"
+      }
+    ],
+    "tax_inclusive_note_raw": null,
+    "total_raw": "238.08",
+    "line_items": [
+      {
+        "description": "Warehouse storage (pallet-week)",
+        "quantity_raw": "20",
+        "unit_price_raw": "6.75",
+        "amount_raw": "135.00"
+      },
+      {
+        "description": "Customs documentation",
+        "quantity_raw": "1",
+        "unit_price_raw": "55.00",
+        "amount_raw": "55.00"
+      },
+      {
+        "description": "Pallet hire (per week)",
+        "quantity_raw": "2",
+        "unit_price_raw": "4.20",
+        "amount_raw": "8.40"
+      }
+    ]
+  },
+  "expected": {
+    "vendor_key": "velmora logistics",
+    "vendor_tax_id": "ZZ771034592",
+    "invoice_number": "VL20261395",
+    "invoice_date": "2026-09-03",
+    "due_date": "2026-10-03",
+    "currency": "GBP",
+    "subtotal": "198.40",
+    "discount": null,
+    "shipping": null,
+    "tax_total": "39.68",
+    "total": "238.08",
+    "tax_inclusive": false,
+    "line_items": [
+      {
+        "description": "Warehouse storage (pallet-week)",
+        "quantity": "20",
+        "unit_price": "6.75",
+        "amount": "135.00"
+      },
+      {
+        "description": "Customs documentation",
+        "quantity": "1",
+        "unit_price": "55.00",
+        "amount": "55.00"
+      },
+      {
+        "description": "Pallet hire (per week)",
+        "quantity": "2",
+        "unit_price": "4.20",
+        "amount": "8.40"
+      }
+    ]
+  },
+  "route": {
+    "status": "auto_approved",
+    "reason": null,
+    "flags": [],
+    "duplicate_of": null
+  },
+  "render": {
+    "kind": "invoice",
+    "layout": "classic",
+    "language": "en",
+    "vendor_address": [
+      "Unit 4, Fenwick Trade Park",
+      "Hollins Cross, ZZ 31108"
+    ],
+    "bill_to": [
+      "Lumen Harbor Trading Ltd",
+      "Accounts Payable",
+      "7 Saltmarsh Row",
+      "Port Elnor, ZZ 20417"
+    ],
+    "currency_display": "code",
+    "notes": [],
+    "hidden_text": null,
+    "title": null,
+    "paragraphs": [],
+    "table_rows": [],
+    "scan": null,
+    "encrypt_password": null,
+    "source_doc_id": null
+  }
+}

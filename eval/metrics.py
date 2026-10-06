@@ -64,6 +64,8 @@ class Prediction:
     output_tokens: int | None = None
     outcome: str | None = None
     raw_output: str | None = None
+    flags: tuple[str, ...] = ()
+    reason: str | None = None
 
 
 @dataclass(frozen=True)
@@ -91,9 +93,18 @@ class DocumentResult:
     doc_id: str
     expected_status: ExpectedStatus
     predicted_status: ExpectedStatus | None
+    expected_flags: tuple[str, ...]
+    predicted_flags: tuple[str, ...]
     outcome: str | None
     wrong_fields: tuple[str, ...]
     raw_output: str | None
+
+    @property
+    def route_matches(self) -> bool:
+        """Status and raised checks are exactly the ones ground truth expects."""
+        return self.predicted_status == self.expected_status and set(self.predicted_flags) == set(
+            self.expected_flags
+        )
 
 
 @dataclass(frozen=True)
@@ -183,6 +194,8 @@ def evaluate(docs: Sequence[GroundTruth], predictions: Sequence[Prediction]) -> 
                 doc_id=doc.doc_id,
                 expected_status=doc.route.status,
                 predicted_status=prediction.status,
+                expected_flags=doc.route.flags,
+                predicted_flags=prediction.flags,
                 outcome=prediction.outcome,
                 wrong_fields=mismatches,
                 raw_output=prediction.raw_output,

@@ -2,7 +2,7 @@
 
 Invoice processing from Gmail with verifiable extraction, deterministic validation and human review.
 
-Portfolio project, work in progress. Current state: Stage 2 (PDF text and vision extraction with Groq, normalization, eval). The specification and stage plan live in [docs/SPEC.md](docs/SPEC.md) (in Russian).
+Portfolio project, work in progress. Current state: Stage 3 (checks, vendor matching, duplicates, routing, status machine and the queue worker). The specification and stage plan live in [docs/SPEC.md](docs/SPEC.md) (in Russian).
 
 ## Stack
 

@@ -1,15 +1,13 @@
 import os
 from collections.abc import Iterator
-from uuid import uuid4
 
-import psycopg
 import pytest
 from dotenv import dotenv_values
-from sqlalchemy import URL, Connection, Engine, create_engine, make_url, text
+from sqlalchemy import Connection, Engine
 
 from app.config import REPO_ROOT, Settings
+from eval.database import temporary_database
 
-MIGRATIONS_DIR = REPO_ROOT / "supabase" / "migrations"
 UNREACHABLE_DATABASE_URL = "postgresql+psycopg://postgres@127.0.0.1:1/postgres"
 
 
@@ -40,31 +38,11 @@ def admin_database_url() -> str:
     return url
 
 
-def apply_migrations(url: URL) -> None:
-    """Apply every SQL migration in filename order."""
-    conninfo = url.set(drivername="postgresql").render_as_string(hide_password=False)
-    with psycopg.connect(conninfo) as conn:
-        for path in sorted(MIGRATIONS_DIR.glob("*.sql")):
-            conn.execute(path.read_text(encoding="utf-8"))
-
-
 @pytest.fixture(scope="module")
 def migrated_engine(admin_database_url: str) -> Iterator[Engine]:
-    """Create a throwaway database with all migrations applied and drop it afterwards."""
-    admin_url = make_url(admin_database_url)
-    name = f"test_{uuid4().hex[:12]}"
-    admin = create_engine(admin_url, isolation_level="AUTOCOMMIT")
-    with admin.connect() as conn:
-        conn.execute(text(f'CREATE DATABASE "{name}"'))
-    engine = create_engine(admin_url.set(database=name))
-    try:
-        apply_migrations(admin_url.set(database=name))
+    """Throwaway database with all migrations applied, shared by one test module."""
+    with temporary_database(admin_database_url, prefix="test") as engine:
         yield engine
-    finally:
-        engine.dispose()
-        with admin.connect() as conn:
-            conn.execute(text(f'DROP DATABASE "{name}" WITH (FORCE)'))
-        admin.dispose()
 
 
 @pytest.fixture
