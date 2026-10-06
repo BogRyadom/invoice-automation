@@ -14,7 +14,9 @@ receive mail: the corpus is placed into the inbox by a script, nobody has to sen
 
 ## 2. Google Cloud project and OAuth clients
 
-Sign in to <https://console.cloud.google.com> with the demo account.
+Sign in to <https://console.cloud.google.com> with the demo account. No free trial and no billing
+account are needed: skip any "Try for free" or "Start free" offer and never add a card. The
+Gmail, Sheets and Drive APIs and OAuth clients work without billing.
 
 1. Create a project, for example `invoice-automation-demo`.
 2. **APIs and services → Library**: enable **Gmail API**, **Google Sheets API** and
@@ -23,8 +25,9 @@ Sign in to <https://console.cloud.google.com> with the demo account.
    e-mail of your choice. Under **Audience → Test users** add the demo Gmail address. The app
    stays in testing mode; Google will show an "unverified app" warning, which is expected.
 4. **Clients → Create client**, type **Web application**, name `n8n`. Authorised redirect URI:
-   `http://localhost:5678/rest/oauth2-credential/callback`. Keep the client ID and secret for
-   step 5.
+   `http://localhost:5678/rest/oauth2-credential/callback`. Download the JSON right away (the
+   secret may not be shown again) and save it as `.secrets/n8n_oauth_client.json`; n8n needs
+   its client ID and secret in step 5.
 5. **Clients → Create client**, type **Desktop app**, name `seed script`. Download the JSON and
    save it as `.secrets/google_oauth_client.json` in the repository.
 
