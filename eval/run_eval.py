@@ -1,25 +1,31 @@
 import argparse
 import sys
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from datetime import date
 from pathlib import Path
 
+from app.config import get_settings
+from app.extraction.groq_provider import GroqProvider
 from corpus.storage import load_corpus
-from eval.metrics import EvalReport, evaluate
-from eval.predictors import OraclePredictor, Predictor
+from eval.metrics import EvalReport, Prediction, evaluate
+from eval.predictors import EvalAborted, LlmPredictor, OraclePredictor, Predictor
 from eval.report import RESULTS_DIR, render_markdown, write_results
 
-NOT_IMPLEMENTED = (
-    "The LLM extraction pipeline is not implemented yet (Stage 2). "
-    "Run `make eval-oracle` to check the eval harness."
-)
+# One text invoice, one scan and one non-invoice: exercises every path in a few calls.
+SMOKE_DOCS = ("clean_04", "scan_01", "not_invoice_03")
+SMOKE_FAILURES = ("stopped: llm_unavailable", "stopped: invalid_extraction")
 
 
 def build_predictor(name: str) -> Predictor:
     """Predictor selected on the command line."""
     if name == "oracle":
         return OraclePredictor()
-    raise SystemExit(NOT_IMPLEMENTED)
+    settings = get_settings()
+    try:
+        provider = GroqProvider(settings)
+    except ValueError as exc:
+        raise SystemExit(f"Cannot start the LLM eval: {exc}. See .env.example.") from exc
+    return LlmPredictor(provider, settings)
 
 
 def oracle_failures(report: EvalReport) -> list[str]:
@@ -39,32 +45,72 @@ def oracle_failures(report: EvalReport) -> list[str]:
     return failures
 
 
+def document_lines(report: EvalReport) -> list[str]:
+    """One line per document: outcome and the fields that did not match."""
+    return [
+        f"  {doc.doc_id:16} {doc.outcome or '-':40} wrong: {', '.join(doc.wrong_fields) or '-'}"
+        for doc in report.documents
+    ]
+
+
+def token_summary(predictions: Sequence[Prediction]) -> str:
+    """Total tokens spent by the run."""
+    tokens_in = sum(p.input_tokens or 0 for p in predictions)
+    tokens_out = sum(p.output_tokens or 0 for p in predictions)
+    return f"Tokens used: {tokens_in} input, {tokens_out} output."
+
+
 def main(
     argv: Sequence[str] | None = None,
     *,
     today: date | None = None,
     results_dir: Path = RESULTS_DIR,
+    predictor_factory: Callable[[str], Predictor] = build_predictor,
 ) -> int:
-    """Run the eval on the synthetic corpus and save results for real providers."""
+    """Run the eval on the synthetic corpus and save results for real full runs."""
     parser = argparse.ArgumentParser(description="Evaluate extraction on the synthetic corpus.")
     parser.add_argument("--predictor", choices=["llm", "oracle"], default="llm")
+    parser.add_argument(
+        "--smoke",
+        action="store_true",
+        help=f"run only {', '.join(SMOKE_DOCS)} to check the setup; nothing is saved",
+    )
     args = parser.parse_args(argv)
 
-    predictor = build_predictor(args.predictor)
     docs = load_corpus()
-    report = evaluate(docs, predictor.predict(docs))
+    if args.smoke:
+        docs = [doc for doc in docs if doc.doc_id in SMOKE_DOCS]
+    predictor = predictor_factory(args.predictor)
+    try:
+        predictions = predictor.predict(docs)
+    except EvalAborted as exc:
+        print(f"Eval stopped, nothing saved: {exc}", file=sys.stderr)
+        return 2
+
+    report = evaluate(docs, predictions)
     run_date = today or date.today()
     print(
         render_markdown(
             report, provider=predictor.provider, model=predictor.model, run_date=run_date
         )
     )
+    print("Documents:")
+    print("\n".join(document_lines(report)))
 
     if predictor.provider == "oracle":
         if failures := oracle_failures(report):
             print(f"Harness check failed: {', '.join(failures)}", file=sys.stderr)
             return 1
         print("Harness check passed. Oracle results are not saved.")
+        return 0
+
+    print(token_summary(predictions))
+    if args.smoke:
+        broken = [p.doc_id for p in predictions if (p.outcome or "").startswith(SMOKE_FAILURES)]
+        if broken:
+            print(f"Smoke check failed for: {', '.join(broken)}", file=sys.stderr)
+            return 1
+        print("Smoke check passed. Smoke results are not saved.")
         return 0
 
     path = write_results(

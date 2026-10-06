@@ -1,4 +1,5 @@
 import json
+from collections.abc import Callable
 from dataclasses import replace
 from datetime import date
 from decimal import Decimal
@@ -6,12 +7,16 @@ from pathlib import Path
 
 import pytest
 
+from app.config import Settings
+from app.extraction.contract import Extraction
+from app.extraction.provider import ProviderUnavailable
 from corpus.models import GroundTruth
 from corpus.storage import load_corpus
 from eval.metrics import Prediction, Ratio, Stats, evaluate, stats
-from eval.predictors import OraclePredictor
+from eval.predictors import LlmPredictor, OraclePredictor, Predictor
 from eval.report import write_results
-from eval.run_eval import NOT_IMPLEMENTED, main, oracle_failures
+from eval.run_eval import SMOKE_DOCS, main, oracle_failures
+from tests.fakes import ScriptedProvider
 
 RUN_DATE = date(2026, 10, 6)
 
@@ -182,7 +187,90 @@ def test_cli_oracle_run_passes_and_saves_nothing(
     assert list(tmp_path.iterdir()) == []
 
 
-def test_cli_llm_run_is_not_available_yet(tmp_path: Path) -> None:
-    with pytest.raises(SystemExit, match="Stage 2"):
-        main([], today=RUN_DATE, results_dir=tmp_path)
-    assert "make eval-oracle" in NOT_IMPLEMENTED
+NOT_AN_INVOICE = Extraction(
+    document_type="other",
+    vendor_name_raw=None,
+    vendor_tax_id_raw=None,
+    invoice_number_raw=None,
+    invoice_date_raw=None,
+    due_date_raw=None,
+    currency_raw=None,
+    subtotal_raw=None,
+    discount_raw=None,
+    shipping_raw=None,
+    tax_lines=[],
+    tax_inclusive_note_raw=None,
+    total_raw=None,
+    line_items=[],
+).model_dump_json()
+
+
+def correct_answers(docs: list[GroundTruth]) -> list[str | Exception]:
+    """What a perfect model would answer, in the order the pipeline calls it."""
+    return [
+        doc.printed.model_dump_json() if doc.printed else NOT_AN_INVOICE
+        for doc in docs
+        if doc.extraction_path is not None
+    ]
+
+
+def llm_factory(settings: Settings, answers: list[str | Exception]) -> Callable[[str], Predictor]:
+    def factory(_: str) -> Predictor:
+        return LlmPredictor(ScriptedProvider(answers), settings, log=lambda _: None)
+
+    return factory
+
+
+def test_full_llm_run_through_the_pipeline(
+    settings: Settings, corpus: list[GroundTruth], tmp_path: Path
+) -> None:
+    factory = llm_factory(settings, correct_answers(corpus))
+
+    assert main([], today=RUN_DATE, results_dir=tmp_path, predictor_factory=factory) == 0
+
+    [saved] = tmp_path.glob("*.json")
+    data = json.loads(saved.read_text(encoding="utf-8"))
+    assert saved.name == "2026-10-06_fake_fake-text-fake-vision.json"
+    assert data["field_accuracy"]["total"] == {"hits": 28, "total": 28}
+    assert data["line_item_amounts_match"] == {"hits": 28, "total": 28}
+    assert data["document_type_accuracy"] == {"hits": 31, "total": 31}
+    assert data["review_rate"] == {"hits": 0, "total": 0}
+    assert data["errors_sent_to_review"] == {"hits": 0, "total": 0}
+    outcomes = {doc["doc_id"]: doc["outcome"] for doc in data["documents"]}
+    assert outcomes["duplicate_01"] == "skipped: duplicate_file"
+    assert outcomes["broken_01"] == "stopped: unreadable_pdf"
+    assert outcomes["broken_02"] == "stopped: encrypted_pdf"
+    assert outcomes["scan_01"] == "extracted (vision, 1 call(s))"
+
+
+def test_smoke_run_saves_nothing(
+    settings: Settings,
+    corpus: list[GroundTruth],
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    smoke_docs = [doc for doc in corpus if doc.doc_id in SMOKE_DOCS]
+    factory = llm_factory(settings, correct_answers(smoke_docs))
+
+    exit_code = main(["--smoke"], today=RUN_DATE, results_dir=tmp_path, predictor_factory=factory)
+
+    assert exit_code == 0
+    assert "Smoke check passed" in capsys.readouterr().out
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_smoke_run_fails_when_the_llm_is_unavailable(settings: Settings, tmp_path: Path) -> None:
+    factory = llm_factory(settings, [ProviderUnavailable("down") for _ in SMOKE_DOCS])
+
+    exit_code = main(["--smoke"], today=RUN_DATE, results_dir=tmp_path, predictor_factory=factory)
+
+    assert exit_code == 1
+
+
+def test_fatal_provider_error_stops_the_run_without_saving(
+    settings: Settings, tmp_path: Path
+) -> None:
+    factory = llm_factory(settings, [ProviderUnavailable("daily quota", fatal=True)])
+
+    assert main([], today=RUN_DATE, results_dir=tmp_path, predictor_factory=factory) == 2
+    assert list(tmp_path.iterdir()) == []

@@ -17,13 +17,13 @@ from corpus.formatting import (
 )
 from corpus.models import (
     EmailMeta,
+    ExpectedInvoice,
+    ExpectedLineItem,
     ExpectedRoute,
     GroundTruth,
     Group,
     KnownVendor,
     Layout,
-    NormalizedInvoice,
-    NormalizedLineItem,
     RenderKind,
     RenderSpec,
     ScanSpec,
@@ -185,7 +185,7 @@ def invoice(
     )
 
     evaluated = encrypt_password is None
-    expected = NormalizedInvoice(
+    expected = ExpectedInvoice(
         vendor_key=vendor.key,
         vendor_tax_id=vendor.tax_id,
         invoice_number=normalize_invoice_number(number),
@@ -199,7 +199,7 @@ def invoice(
         total=total,
         tax_inclusive=tax_inclusive_note is not None,
         line_items=tuple(
-            NormalizedLineItem(
+            ExpectedLineItem(
                 description=item.description,
                 quantity=item.quantity,
                 unit_price=item.unit_price,

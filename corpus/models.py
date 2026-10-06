@@ -57,14 +57,14 @@ class RenderSpec(Frozen):
     source_doc_id: str | None = None
 
 
-class NormalizedLineItem(Frozen):
+class ExpectedLineItem(Frozen):
     description: str
     quantity: Decimal | None
     unit_price: Decimal | None
     amount: Decimal | None
 
 
-class NormalizedInvoice(Frozen):
+class ExpectedInvoice(Frozen):
     vendor_key: str
     vendor_tax_id: str | None
     invoice_number: str
@@ -77,7 +77,7 @@ class NormalizedInvoice(Frozen):
     tax_total: Decimal | None
     total: Decimal
     tax_inclusive: bool
-    line_items: tuple[NormalizedLineItem, ...]
+    line_items: tuple[ExpectedLineItem, ...]
 
 
 class ExpectedRoute(Frozen):
@@ -96,7 +96,7 @@ class GroundTruth(Frozen):
     extraction_path: Literal["text", "vision"] | None
     document_type: DocumentType | None
     printed: Extraction | None
-    expected: NormalizedInvoice | None
+    expected: ExpectedInvoice | None
     route: ExpectedRoute
     render: RenderSpec
 

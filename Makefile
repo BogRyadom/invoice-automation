@@ -4,10 +4,10 @@ API = uv --directory api
 PY = uv run --project api
 WEB = npm --prefix web
 
-.PHONY: help install db-start db-stop db-reset up down logs lint fmt test corpus eval eval-oracle
+.PHONY: help install db-start db-stop db-reset up down logs lint fmt test corpus eval eval-smoke eval-oracle
 
 help:
-	@echo Targets: install db-start db-stop db-reset up down logs lint fmt test corpus eval eval-oracle
+	@echo Targets: install db-start db-stop db-reset up down logs lint fmt test corpus eval eval-smoke eval-oracle
 
 install:
 	npm ci
@@ -51,9 +51,13 @@ test:
 corpus:
 	$(PY) python -m corpus.build
 
-# Real LLM run; results go to eval/results. Available from Stage 2.
+# Real LLM run on the whole corpus; results go to eval/results.
 eval:
 	$(PY) python -m eval.run_eval
+
+# Real LLM run on three documents to check the setup within rate limits; nothing is saved.
+eval-smoke:
+	$(PY) python -m eval.run_eval --smoke
 
 # Checks the eval harness against ground truth; nothing is saved.
 eval-oracle:

@@ -1,7 +1,7 @@
 # Extraction contract (docs/SPEC.md section 6). The LLM returns values exactly as printed,
 # code normalizes numbers, dates and currency. There is no confidence field by design.
 
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict
 
@@ -41,3 +41,29 @@ class Extraction(BaseModel):
     tax_inclusive_note_raw: str | None
     total_raw: str | None
     line_items: list[LineItem]
+
+
+def strict_json_schema(model: type[BaseModel] = Extraction) -> dict[str, Any]:
+    """Schema in the strict structured-output subset: refs inlined, all fields required."""
+    schema = model.model_json_schema()
+    definitions = schema.pop("$defs", {})
+
+    def convert(node: dict[str, Any]) -> dict[str, Any]:
+        if "$ref" in node:
+            return convert(definitions[node["$ref"].rsplit("/", 1)[-1]])
+        if "anyOf" in node:
+            options = [convert(option) for option in node["anyOf"]]
+            if all(set(option) == {"type"} for option in options):
+                return {"type": [option["type"] for option in options]}
+            return {"anyOf": options}
+        result = {key: value for key, value in node.items() if key not in ("title", "default")}
+        if result.get("type") == "object":
+            properties = {name: convert(sub) for name, sub in node["properties"].items()}
+            result.update(
+                properties=properties, required=list(properties), additionalProperties=False
+            )
+        if result.get("type") == "array":
+            result["items"] = convert(node["items"])
+        return result
+
+    return convert(schema)

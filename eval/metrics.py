@@ -1,8 +1,12 @@
 from collections.abc import Sequence
 from dataclasses import dataclass
+from datetime import date
+from decimal import Decimal
+
+from pydantic import BaseModel, ConfigDict
 
 from app.extraction.contract import DocumentType
-from corpus.models import ExpectedStatus, GroundTruth, NormalizedInvoice
+from corpus.models import ExpectedInvoice, ExpectedStatus, GroundTruth
 
 FIELDS = (
     "vendor_key",
@@ -21,15 +25,45 @@ FIELDS = (
 KEY_FIELDS = ("vendor_key", "invoice_number", "invoice_date", "total", "currency")
 
 
+# Same fields as ExpectedInvoice, but anything may be missing in a prediction.
+class PredictedLineItem(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    description: str | None = None
+    quantity: Decimal | None = None
+    unit_price: Decimal | None = None
+    amount: Decimal | None = None
+
+
+class PredictedInvoice(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    vendor_key: str | None = None
+    vendor_tax_id: str | None = None
+    invoice_number: str | None = None
+    invoice_date: date | None = None
+    due_date: date | None = None
+    currency: str | None = None
+    subtotal: Decimal | None = None
+    discount: Decimal | None = None
+    shipping: Decimal | None = None
+    tax_total: Decimal | None = None
+    total: Decimal | None = None
+    tax_inclusive: bool = False
+    line_items: tuple[PredictedLineItem, ...] = ()
+
+
 @dataclass(frozen=True)
 class Prediction:
     doc_id: str
     document_type: DocumentType | None
-    invoice: NormalizedInvoice | None
+    invoice: PredictedInvoice | None
     status: ExpectedStatus | None
     latency_ms: int | None = None
     input_tokens: int | None = None
     output_tokens: int | None = None
+    outcome: str | None = None
+    raw_output: str | None = None
 
 
 @dataclass(frozen=True)
@@ -57,7 +91,9 @@ class DocumentResult:
     doc_id: str
     expected_status: ExpectedStatus
     predicted_status: ExpectedStatus | None
+    outcome: str | None
     wrong_fields: tuple[str, ...]
+    raw_output: str | None
 
 
 @dataclass(frozen=True)
@@ -77,7 +113,7 @@ class EvalReport:
 
 
 def wrong_fields(
-    expected: NormalizedInvoice, predicted: NormalizedInvoice | None, fields: Sequence[str] = FIELDS
+    expected: ExpectedInvoice, predicted: PredictedInvoice | None, fields: Sequence[str] = FIELDS
 ) -> tuple[str, ...]:
     """Fields that differ from ground truth; all of them when nothing was predicted."""
     if predicted is None:
@@ -128,7 +164,8 @@ def evaluate(docs: Sequence[GroundTruth], predictions: Sequence[Prediction]) -> 
             amount_hits += [item.amount for item in predicted_items] == [
                 item.amount for item in doc.expected.line_items
             ]
-            if prediction.invoice is not None and mismatches:
+            # Routing appears in Stage 3; without a status this metric stays n/a.
+            if prediction.invoice is not None and mismatches and prediction.status is not None:
                 with_errors += 1
                 caught += prediction.status == "needs_review"
 
@@ -146,7 +183,9 @@ def evaluate(docs: Sequence[GroundTruth], predictions: Sequence[Prediction]) -> 
                 doc_id=doc.doc_id,
                 expected_status=doc.route.status,
                 predicted_status=prediction.status,
+                outcome=prediction.outcome,
                 wrong_fields=mismatches,
+                raw_output=prediction.raw_output,
             )
         )
 

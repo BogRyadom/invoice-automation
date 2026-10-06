@@ -31,8 +31,12 @@ class Settings(BaseSettings):
     llm_model_text: str = ""
     llm_model_vision: str = ""
     groq_api_key: SecretStr = SecretStr("")
+    llm_reasoning_effort_text: str = "low"
+    llm_reasoning_effort_vision: str = "none"
+    llm_max_vision_pages: int = Field(default=3, ge=1)
     llm_timeout_seconds: int = Field(default=60, gt=0)
     llm_max_attempts: int = Field(default=3, ge=1, le=10)
+    llm_max_wait_seconds: int = Field(default=60, ge=0, le=600)
 
     max_file_mb: int = Field(default=15, gt=0)
     ingest_max_file_mb: int = Field(default=50, gt=0)
