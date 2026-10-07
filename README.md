@@ -2,7 +2,7 @@
 
 Invoice processing from Gmail with verifiable extraction, deterministic validation and human review.
 
-Portfolio project, work in progress. Current state: Stage 4 (ingest and review API, outbox delivery, n8n workflows for Gmail, Slack and Google Sheets). The specification and stage plan live in [docs/SPEC.md](docs/SPEC.md) (in Russian).
+Portfolio project, work in progress. Current state: Stage 5 (review UI: queue, document screen with the PDF next to the extracted fields, per-field check status, approve, reject and override; on top of the ingest and review API, outbox delivery and n8n workflows for Gmail, Slack and Google Sheets). The specification and stage plan live in [docs/SPEC.md](docs/SPEC.md) (in Russian).
 
 ## Stack
 
@@ -31,7 +31,9 @@ make up
 | Supabase Studio | http://127.0.0.1:54323 |
 | n8n | http://localhost:5678 |
 
-Supabase keys for `.env` (`SUPABASE_SECRET_KEY`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`) are printed by `npx supabase status`. Stage 0 does not need them yet.
+Supabase keys for `.env` (`SUPABASE_SECRET_KEY`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`) are printed by `npx supabase status`. The `NEXT_PUBLIC_*` values are built into the web image, so rebuild it after changing them: `docker compose up --build -d web`.
+
+Sign-up is disabled. Create a reviewer in Supabase Studio: Authentication, Add user, Create new user, with Auto Confirm User checked. Then sign in at http://localhost:3000.
 
 Stop everything with `make down`. Connecting Gmail, Google Sheets and Slack is described in [docs/integrations.md](docs/integrations.md).
 
@@ -40,7 +42,7 @@ Stop everything with `make down`. Connecting Gmail, Google Sheets and Slack is d
 | Command | What it does |
 |---|---|
 | `make lint` | ruff check, ruff format check, eslint, tsc |
-| `make test` | pytest. DB tests use `TEST_DATABASE_URL` and the local Supabase Postgres |
+| `make test` | pytest, then vitest for the web logic. DB tests use `TEST_DATABASE_URL` and the local Supabase Postgres |
 | `make fmt` | ruff autofix and format |
 | `make db-reset` | recreate the local database and reapply all migrations |
 | `make corpus` | regenerate the synthetic corpus (ground truth JSON and PDFs) |

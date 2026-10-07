@@ -3,12 +3,16 @@
 
 import csv
 import io
+from collections.abc import Sequence
 from datetime import date
+from decimal import Decimal
 from typing import Any
 from uuid import UUID
 
+from pydantic import ValidationError
 from sqlalchemy import Connection, text
 
+from app.extraction.contract import Extraction
 from app.repository import AMOUNT_COLUMNS, LATEST_EXTRACTION, money_text
 
 EXPORT_COLUMNS = (
@@ -37,7 +41,7 @@ def rows(result: Any) -> list[dict[str, Any]]:
 
 
 def list_documents(
-    conn: Connection, status: str | None, limit: int, offset: int
+    conn: Connection, statuses: Sequence[str] | None, limit: int, offset: int
 ) -> list[dict[str, Any]]:
     """Queue rows: vendor, number, amount, received date and number of raised checks."""
     return rows(
@@ -54,12 +58,12 @@ def list_documents(
                        (SELECT count(DISTINCT c.check_id) FROM check_results c
                         WHERE c.extraction_id = x.id AND c.status = 'fail') AS flag_count
                 FROM documents d {LATEST_EXTRACTION}
-                WHERE (CAST(:status AS text) IS NULL OR d.status = :status)
+                WHERE (CAST(:statuses AS text[]) IS NULL OR d.status = ANY(:statuses))
                 ORDER BY d.received_at DESC, d.id
                 LIMIT :limit OFFSET :offset
                 """
             ),
-            {"status": status, "limit": limit, "offset": offset},
+            {"statuses": list(statuses) if statuses else None, "limit": limit, "offset": offset},
         )
     )
 
@@ -119,7 +123,7 @@ def document_detail(conn: Connection, document_id: UUID) -> dict[str, Any] | Non
     invoice = conn.execute(
         text(
             """
-            SELECT i.*, v.canonical_name AS vendor FROM invoices i
+            SELECT i.*, v.canonical_name AS vendor, v.tax_id AS vendor_tax_id FROM invoices i
             JOIN vendors v ON v.id = i.vendor_id WHERE i.document_id = :id
             """
         ),
@@ -140,13 +144,59 @@ def document_detail(conn: Connection, document_id: UUID) -> dict[str, Any] | Non
         if invoice
         else []
     )
+    invoice_values = None
+    if invoice:
+        invoice_values = {
+            key: money_text(value) if key in AMOUNT_COLUMNS else value
+            for key, value in invoice._mapping.items()
+        }
+        invoice_values["line_items"] = [
+            {
+                **item,
+                "quantity": plain_number(item["quantity"]),
+                "unit_price": money_text(item["unit_price"]),
+                "amount": money_text(item["amount"]),
+            }
+            for item in line_items
+        ]
     return {
         "document": dict(document._mapping),
         "extraction": dict(extraction._mapping) if extraction else None,
+        "raw_values": raw_values(extraction.raw_output) if extraction else None,
         "checks": checks,
         "events": events,
-        "invoice": {**dict(invoice._mapping), "line_items": line_items} if invoice else None,
+        "invoice": invoice_values,
     }
+
+
+def plain_number(value: Decimal | None) -> str | None:
+    """Quantity without storage padding: 4.0000 -> 4, 7.5000 -> 7.5."""
+    return None if value is None else format(value.normalize(), "f")
+
+
+def raw_values(raw_output: dict[str, Any] | None) -> dict[str, Any] | None:
+    """Values exactly as the model read them from the document, if its answer was valid."""
+    completions = (raw_output or {}).get("completions") or []
+    if not completions:
+        return None
+    try:
+        return Extraction.model_validate_json(completions[-1]["content"]).model_dump()
+    except ValidationError:
+        return None
+
+
+def list_vendors(conn: Connection) -> list[dict[str, Any]]:
+    """Vendor registry for the reviewer's vendor picker."""
+    return rows(
+        conn.execute(
+            text(
+                """
+                SELECT id, canonical_name, normalized_name, tax_id, date_format
+                FROM vendors ORDER BY canonical_name
+                """
+            )
+        )
+    )
 
 
 def ratio(hits: int, total: int) -> dict[str, int]:

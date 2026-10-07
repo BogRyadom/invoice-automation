@@ -57,7 +57,7 @@ Run from the repo root. Requires Docker Desktop (running), GNU make, uv, Node.js
 - Local DB: `make db-start`, `make db-stop`, `make db-reset` (recreates the LOCAL database and reapplies migrations)
 - Lint: `make lint` (ruff check, ruff format --check, eslint, tsc)
 - Format: `make fmt`
-- Test: `make test`. DB tests need `TEST_DATABASE_URL` and the local Supabase Postgres; locally they skip without it, in CI they fail
+- Test: `make test` (pytest, then vitest in web). DB tests need `TEST_DATABASE_URL` and the local Supabase Postgres; locally they skip without it, in CI they fail
 - New migration: `npx supabase migration new <name> < /dev/null` (it waits for SQL on stdin otherwise)
 - Demo without e-mail: `make demo-send` (add `ARGS="--fresh"` to resend as new e-mails); n8n workflows: `make n8n-import`
 - Corpus: `make corpus` regenerates `corpus/ground_truth`, `corpus/documents`, the manifest and the vendor seed

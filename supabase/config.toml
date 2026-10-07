@@ -223,8 +223,9 @@ web3 = 30
 # secret = ""
 
 [auth.email]
-# Allow/disallow new user signups via email to your project.
-enable_signup = false
+# In the Supabase CLI this key turns the email provider on, so reviewers can sign in with a
+# password. Sign-ups stay blocked by `enable_signup = false` under [auth].
+enable_signup = true
 # If enabled, a user will be required to confirm any email change on both the old, and new email
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true

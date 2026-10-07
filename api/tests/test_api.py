@@ -245,6 +245,35 @@ def test_queue_and_document_page(
     assert {c["check_id"] for c in page["checks"] if c["status"] == "fail"} == {"W4"}
     assert [e["payload"].get("to") for e in page["events"]] == [None, "processing", "needs_review"]
     assert page["pdf_url"].startswith("file:")
+    assert page["raw_values"]["total_raw"] == "2,398.50"
+
+
+def test_queue_filters_by_several_statuses(
+    client: TestClient, engine: Engine, store: LocalDocumentStore, api_settings: Settings
+) -> None:
+    document_id = in_review(client, engine, store, api_settings, "clean_09")
+    approve = {"values": values("clean_09")}
+    client.post(f"/api/documents/{document_id}/approve", headers=AUTH, json=approve)
+
+    approved = client.get(
+        "/api/documents",
+        params=[("status", "approved"), ("status", "auto_approved"), ("status", "exported")],
+        headers=AUTH,
+    ).json()
+    in_review_now = client.get("/api/documents", params={"status": "needs_review"}, headers=AUTH)
+
+    assert [row["id"] for row in approved] == [str(document_id)]
+    assert in_review_now.json() == []
+
+
+def test_vendor_list(client: TestClient) -> None:
+    vendors = client.get("/api/vendors", headers=AUTH).json()
+
+    assert [v["canonical_name"] for v in vendors][:2] == [
+        "Brevik Software Corp.",
+        "Halvren Maschinenbau GmbH",
+    ]
+    assert len(vendors) == 6
 
 
 def test_approving_a_new_vendor(
@@ -263,6 +292,16 @@ def test_approving_a_new_vendor(
         == 1
     )
     assert scalar(engine, "SELECT approved_by FROM invoices") == "reviewer@lumen-harbor.example"
+    page = client.get(f"/api/documents/{document_id}", headers=AUTH).json()
+    assert (page["invoice"]["total"], page["invoice"]["line_items"][0]["quantity"]) == (
+        "2398.50",
+        "3",
+    )
+    vendor_tax_id = scalar(
+        engine, "SELECT tax_id FROM vendors WHERE normalized_name = 'pellucid analytics'"
+    )
+    assert vendor_tax_id is not None
+    assert page["invoice"]["vendor_tax_id"] == vendor_tax_id
     assert scalar(engine, "SELECT count(*) FROM review_edits") == 0
     payload = scalar(engine, "SELECT payload FROM outbox_events WHERE event_type = 'approved'")
     assert (payload["vendor"], payload["total"]) == ("Pellucid Analytics Ltd", "2398.50")

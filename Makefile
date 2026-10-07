@@ -46,6 +46,7 @@ fmt:
 
 test:
 	$(API) run pytest
+	$(WEB) test
 
 # Regenerates corpus/ground_truth, corpus/documents, the manifest and the vendor seed.
 corpus:

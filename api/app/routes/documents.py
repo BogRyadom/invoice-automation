@@ -41,7 +41,7 @@ def review_call[T](action: Callable[[], T]) -> T:
 def list_documents(
     _: Reviewed,
     engine: Db,
-    status_filter: Annotated[Status | None, Query(alias="status")] = None,
+    status_filter: Annotated[list[Status] | None, Query(alias="status")] = None,
     limit: Annotated[int, Query(ge=1, le=200)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> Response:
@@ -97,6 +97,13 @@ def reprocess_document(document_id: UUID, reviewer: Reviewed, engine: Db) -> Res
     with engine.begin() as conn:
         new_status = review_call(lambda: review.reprocess(conn, document_id, reviewer))
     return exact_json({"document_id": document_id, "status": new_status})
+
+
+@router.get("/vendors")
+def list_vendors(_: Reviewed, engine: Db) -> Response:
+    """Known vendors, for choosing one on approval."""
+    with engine.connect() as conn:
+        return exact_json(queries.list_vendors(conn))
 
 
 @router.get("/invoices/export.csv")

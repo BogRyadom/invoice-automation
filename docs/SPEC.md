@@ -241,8 +241,9 @@ RLS включён на всех таблицах, политик нет: рол
 | Метод | Назначение |
 |---|---|
 | `POST /api/documents` | Multipart: файл и метаданные письма. Auth: shared secret в заголовке `X-Ingest-Secret`. Идемпотентен: 202 для нового документа, 200 для повторной доставки. 413 выше `INGEST_MAX_FILE_MB`, 503 если Storage или БД недоступны (n8n повторит). Оригинал хранится по пути `originals/<sha256[:2]>/<sha256>`, один объект на одинаковое содержимое |
-| `GET /api/documents?status=` | Список для очереди |
-| `GET /api/documents/{id}` | Extraction, проверки, события, signed URL на PDF |
+| `GET /api/documents?status=` | Список для очереди. `status` можно повторять (`?status=approved&status=exported`) |
+| `GET /api/documents/{id}` | Extraction (raw-значения из ответа модели и нормализованные), проверки, события, signed URL на PDF |
+| `GET /api/vendors` | Справочник vendors для выбора vendor в форме |
 | `POST /api/documents/{id}/approve` | Итоговые значения полей, опционально override и комментарий |
 | `POST /api/documents/{id}/reject` | Причина обязательна |
 | `POST /api/documents/{id}/reprocess` | Только из `failed` |
@@ -267,6 +268,21 @@ RLS включён на всех таблицах, политик нет: рол
 1. **Queue.** Вкладки Needs review, Failed, Skipped, Approved. Колонки: vendor, номер, сумма, дата получения, число флагов.
 2. **Document.** Слева PDF (signed URL). Справа форма: у каждого поля статус (ok, warning, error), текст проверки и raw-значение рядом с нормализованным. Таблица line items. Баннер дубликата со ссылкой. Кнопки Approve, Reject, Reprocess. Override с обязательным комментарием. Внизу timeline событий.
 3. **Stats.** Количество по статусам, review rate, edit rate по полям, failures по причинам, недоставленные outbox-события.
+
+Решения Этапа 5:
+
+- Интерфейс на английском, светлая и тёмная тема по настройке системы. Экран Stats делается на Этапе 6.
+- Вкладка Approved показывает `approved`, `auto_approved` и `exported`.
+- Суммы в форме и в очереди приходят из API строками и не проходят через float. Форма проверяет формат до отправки (decimal, ISO-дата, код валюты из трёх букв), окончательную проверку делает сервер.
+- Vendor выбирается из совпадения, кандидатов или справочника (`GET /api/vendors`), либо вводится как новый.
+- При W1 форма показывает оба прочтения даты (DMY и MDY), человек выбирает одно. Выбор уходит в `date_format` и сохраняется у vendor.
+- Override не предлагается заранее. Approve сначала отправляется без override; если сервер отвечает 422 со списком непройденных hard checks, форма показывает их и даёт подтвердить override с обязательным комментарием.
+- У документа в `failed` форма пустая, кнопка Approve manual entry.
+- Если vendor с таким именем появился в справочнике после обработки, approve нового vendor получает 409 с `vendor_id`. Форма выбирает этого vendor и просит проверить и нажать Approve ещё раз; повторно сама не отправляет.
+- Статус поля не показывается, если проверки не запускались (нет extraction) или если поле пустое и ни одна проверка его не отметила: «ok» у пустого поля читалось бы как подтверждённое значение.
+- У пропущенного документа без extraction форма не показывается, только баннер, PDF и timeline.
+- У одобренного счёта Tax ID берётся из записи vendor (`invoice.vendor_tax_id` в `GET /api/documents/{id}`), в `invoices` он не хранится.
+- Даты со временем показываются с названием месяца (6 Oct 2026, 23:38), чтобы день и месяц нельзя было перепутать.
 
 Auth: Supabase Auth. Все review endpoints требуют JWT. API проверяет подпись по опубликованным ключам проекта (JWKS, ES256 или RS256), audience `authenticated` и issuer `SUPABASE_PUBLIC_URL/auth/v1`. Регистрация из UI выключена, рецензентов создают в Supabase Studio.
 
@@ -333,7 +349,7 @@ Approve принимает итоговые значения полей. Сер�
 
 - `pytest`. Unit: нормализация чисел и дат (table-driven), vendor, проверки H и W, routing, переходы статусов, идемпотентный ingest, дубликаты, retry policy.
 - Integration: pipeline на всём корпусе с fake provider и записанными ответами модели; worker на временной БД (очередь, повторы, дубликаты, блокировки).
-- CI (GitHub Actions): `ruff`, `pytest`, для web `eslint` и `tsc`.
+- CI (GitHub Actions): `ruff`, `pytest`, для web `eslint`, `tsc` и `vitest` (чистая логика формы и отображения, без браузера).
 - Локальный запуск одной командой: `make up` поднимает локальный Supabase и через docker compose api, worker, web и n8n. `.env.example` полный.
 
 Структура репозитория:
